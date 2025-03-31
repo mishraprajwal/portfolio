@@ -4,7 +4,7 @@ import { navLists } from '../constants';
 const navLinks = {
   Email: "mailto:prajwalm882@gmail.com",           // Replace with your email
   LinkedIn: "https://www.linkedin.com/in/prajwalkaruneshmishra/", // Replace with your LinkedIn URL
-  Home: "/",                                          // Refreshes the home page
+  Home: "/portfolio/",                                          // Refreshes the home page
   GitHub: "https://github.com/mishraprajwal",          // Replace with your GitHub URL
   About: "#"                                          // Placeholder for About page
 };

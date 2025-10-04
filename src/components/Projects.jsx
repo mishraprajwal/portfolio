@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -8,162 +8,115 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Projects = () => {
   const projectsRef = useRef(null);
-  const cardsRef = useRef(null);
-  const techGroup1Ref = useRef(null);
-  const techGroup2Ref = useRef(null);
-  const techGroup3Ref = useRef(null);
-  const skillsHeadingRef = useRef(null);
+  const gridRef = useRef(null);
 
-  // Projects data with tech stacks per project.
   const projects = [
-    { 
-      name: 'Real-Time Admin Dashboard', 
+    {
+      name: 'Real-Time Admin Dashboard',
       github: 'https://github.com/mishraprajwal/CRMDashboard',
-      techStack: ['TypeScript', 'React', 'GraphQL']
+      techStack: ['TypeScript', 'React', 'GraphQL'],
+      desc: 'Fast analytics and real-time updates for business operations.',
     },
-    { 
-      name: 'Web3 CrowdFunding Platform', 
+    {
+      name: 'Web3 CrowdFunding Platform',
       github: 'https://github.com/mishraprajwal/CrowdfundingPlatform',
-      techStack: ['TypeScript', 'React', 'Web3']
+      techStack: ['TypeScript', 'React', 'Web3'],
+      desc: 'Decentralized crowdfunding with token-based incentives.',
     },
-    { 
-      name: 'Heart Failure Prediction', 
+    {
+      name: 'Heart Failure Prediction',
       github: 'https://github.com/mishraprajwal/HeartFailurePrediction',
-      techStack: ['Machine Learning', 'Python', 'Pandas']
+      techStack: ['Machine Learning', 'Python', 'Pandas'],
+      desc: 'ML model to assist clinicians in early detection.',
     },
-    { 
-      name: 'Sushi', 
+    {
+      name: 'Sushi',
       github: 'https://github.com/mishraprajwal/sushi',
-      techStack: ['JavaScript', 'HTML', 'CSS']
+      techStack: ['JavaScript', 'HTML', 'CSS'],
+      desc: 'A polished frontend demo with delightful micro-interactions.',
     },
-    { 
-      name: 'ChatBot', 
+    {
+      name: 'ChatBot',
       github: 'https://github.com/mishraprajwal/ChatBot',
-      techStack: ['TypeScript', 'React', 'Node']
+      techStack: ['TypeScript', 'React', 'Node'],
+      desc: 'Conversational agent with intent detection and context.',
     },
   ];
-
-  // List of technologies and languages you know.
-  const knownTech = [
-    'Java',
-    'Python',
-    'JavaScript',
-    'TypeScript',
-    'PL/SQL',
-    'HTML/CSS',
-    'React',
-    'Node',
-    'Web3',
-    'Spring',
-    'Fast API',
-    'Pandas',
-    'AWS',
-    'Docker',
-    'Git',
-    'Postman',
-    'MySQL',
-    'MongoDB'
-  ];
-
-  // Split the knownTech array into three groups.
-  const groupSize = Math.ceil(knownTech.length / 3);
-  const firstGroup = knownTech.slice(0, groupSize);
-  const secondGroup = knownTech.slice(groupSize, groupSize * 2);
-  const thirdGroup = knownTech.slice(groupSize * 2);
 
   useGSAP(() => {
-    // ---------------- Projects Cards Animation ----------------
-    if (cardsRef.current && projectsRef.current) {
-      const cards = cardsRef.current.children;
-      const totalWidth = cards[0].offsetWidth * projects.length;
-      // Duplicate cards for a seamless loop
-      const clonedCards = Array.from(cards).map(card => card.cloneNode(true));
-      cardsRef.current.append(...clonedCards);
+    if (!projectsRef.current) return;
 
-      gsap.to(cardsRef.current, {
-        x: -totalWidth,
-        duration: 50,
-        ease: 'none',
-        repeat: -1,
-        modifiers: {
-          x: (x) => `${parseFloat(x) % totalWidth}px`,
+    // Title reveal
+    gsap.fromTo(
+      '#projects-title',
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.9,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: projectsRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
         },
-      });
+      }
+    );
 
-      // Pause animation on hover for project cards
-      cardsRef.current.addEventListener('mouseenter', () =>
-        gsap.to(cardsRef.current, { timeScale: 0, overwrite: 'auto' })
-      );
-      cardsRef.current.addEventListener('mouseleave', () =>
-        gsap.to(cardsRef.current, { timeScale: 1, overwrite: 'auto' })
-      );
-
-      // Fade in section title on scroll
+    // Cards entrance stagger
+    if (gridRef.current) {
+      const cards = Array.from(gridRef.current.children);
       gsap.fromTo(
-        '#projects-title',
-        { opacity: 0, y: 50 },
+        cards,
+        { opacity: 0, y: 36, scale: 0.98 },
         {
           opacity: 1,
           y: 0,
-          duration: 1,
-          ease: 'power3.out',
+          scale: 1,
+          duration: 0.9,
+          stagger: 0.08,
+          ease: 'expo.out',
           scrollTrigger: {
             trigger: projectsRef.current,
             start: 'top 80%',
-            toggleActions: 'play none none none',
           },
         }
       );
-    }
 
-    // ---------------- Advanced Known Tech Animation (Three Groups) ----------------
-    if (
-      techGroup1Ref.current && 
-      techGroup2Ref.current && 
-      techGroup3Ref.current && 
-      skillsHeadingRef.current
-    ) {
-      const tl = gsap.timeline({ repeat: -1, repeatDelay: 1 });
-      tl.call(() => {
-          skillsHeadingRef.current.innerText = "Languages";
-        })
-        .fromTo(
-          techGroup1Ref.current.children,
-          { opacity: 0, y: 50 },
-          { opacity: 1, y: 0, stagger: 0.2, duration: 0.8 }
-        )
-        .to(
-          techGroup1Ref.current.children,
-          { opacity: 0, y: -50, stagger: 0.2, duration: 0.8 },
-          "+=2"
-        )
-        .call(() => {
-          skillsHeadingRef.current.innerText = "Frameworks";
-        })
-        .fromTo(
-          techGroup2Ref.current.children,
-          { opacity: 0, y: 50 },
-          { opacity: 1, y: 0, stagger: 0.2, duration: 0.8 }
-        )
-        .to(
-          techGroup2Ref.current.children,
-          { opacity: 0, y: -50, stagger: 0.2, duration: 0.8 },
-          "+=2"
-        )
-        .call(() => {
-          skillsHeadingRef.current.innerText = "Tools";
-        })
-        .fromTo(
-          techGroup3Ref.current.children,
-          { opacity: 0, y: 50 },
-          { opacity: 1, y: 0, stagger: 0.2, duration: 0.8 }
-        )
-        .to(
-          techGroup3Ref.current.children,
-          { opacity: 0, y: -50, stagger: 0.2, duration: 0.8 },
-          "+=2"
-        );
+      // Add mouse tilt for each card
+      cards.forEach((card) => {
+        let rmFn = null;
+        const handleMove = (e) => {
+          const rect = card.getBoundingClientRect();
+          const px = (e.clientX - rect.left) / rect.width;
+          const py = (e.clientY - rect.top) / rect.height;
+          const rx = (py - 0.5) * 10; // degrees
+          const ry = (px - 0.5) * -10;
+          gsap.to(card, { rotationX: rx, rotationY: ry, scale: 1.02, transformPerspective: 800, duration: 0.5, ease: 'power3.out' });
+        };
+        const handleLeave = () => {
+          gsap.to(card, { rotationX: 0, rotationY: 0, scale: 1, duration: 0.6, ease: 'power3.out' });
+        };
+        card.addEventListener('mousemove', handleMove);
+        card.addEventListener('mouseleave', handleLeave);
+        rmFn = () => {
+          card.removeEventListener('mousemove', handleMove);
+          card.removeEventListener('mouseleave', handleLeave);
+        };
+        // store cleanup on dom node
+        card.__cleanup = rmFn;
+      });
     }
+  }, []);
+
+  // cleanup when unmount
+  useEffect(() => {
+    return () => {
+      if (gridRef.current) {
+        Array.from(gridRef.current.children).forEach((c) => { if (c.__cleanup) c.__cleanup(); });
+      }
+      try { ScrollTrigger.getAll().forEach((s) => s.kill()); } catch (e) {}
+    };
   }, []);
 
   return (
@@ -172,100 +125,66 @@ const Projects = () => {
       id="projects"
       className="w-full min-h-screen bg-transparent text-white overflow-hidden flex items-center"
     >
-      <div className="max-w-6xl mx-auto px-4 relative flex flex-col items-center">
-        {/* Section Title */}
+      <div className="max-w-7xl mx-auto px-6 py-20 relative">
         <h2
           id="projects-title"
-          className="text-4xl md:text-5xl font-bold text-center mb-12"
-          style={{
-            fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-            fontWeight: 400,
-          }}
+          className="text-4xl md:text-5xl font-semibold text-center mb-12"
+          style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
         >
-          Projects
+          Selected Work
         </h2>
 
-        {/* Horizontal Scrolling Cards */}
-        <div ref={cardsRef} className="flex space-x-6 mb-16">
-          {projects.map((project, index) => (
-            <a
-              key={index}
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0 w-80 h-auto bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg flex flex-col items-center justify-center"
+        <div ref={gridRef} className="projects-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((p, i) => (
+            <article
+              key={i}
+              className="project-card group perspective-800"
+              tabIndex={0}
+              role="button"
+              onClick={() => window.open(p.github, '_blank')}
             >
-              <h3
-                className="text-xl font-semibold text-center"
-                style={{
-                  fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontWeight: 700,
-                }}
-              >
-                {project.name}
-              </h3>
-              {/* Tech Stack for each project */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                {project.techStack.map((tech, idx) => (
-                  <span
-                    key={idx}
-                    className="text-xs bg-white/20 text-white/80 px-2 py-1 rounded-full"
-                  >
-                    {tech}
-                  </span>
-                ))}
+              <div className="card-accent" aria-hidden></div>
+              <div className="card-sheen" aria-hidden></div>
+              <div className="card-hover-overlay" aria-hidden>
+                <div className="overlay-inner">Open project • View details</div>
               </div>
-            </a>
+              <div className="card-content">
+                <h3 className="text-xl font-semibold mb-2">{p.name}</h3>
+                <p className="text-sm text-gray-300 mb-4">{p.desc}</p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {p.techStack.map((t, id) => (
+                    <span key={id} className="tech-badge">{t}</span>
+                  ))}
+                </div>
+                <div className="flex items-center gap-3 mt-auto">
+                  <a
+                    href={p.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-gray-200 hover:text-white underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    View Code
+                  </a>
+                  <button
+                    className="visit-btn ml-auto"
+                    onClick={(e) => { e.stopPropagation(); window.open(p.github, '_blank'); }}
+                  >
+                    Open
+                  </button>
+                </div>
+              </div>
+            </article>
           ))}
         </div>
 
-        {/* Known Tech & Languages Section with Advanced Animation (Three Groups) */}
-        <div className="text-center">
-          {/* Dynamic Subheading */}
-          <h3
-            ref={skillsHeadingRef}
-            className="text-3xl font-bold mb-4"
-            style={{
-              fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif',
-              fontWeight: 400,
-            }}
-          >
-            Languages
-          </h3>
-          <div className="overflow-hidden">
-            {/* First group container */}
-            <div ref={techGroup1Ref} className="flex justify-center space-x-4 mb-4">
-              {firstGroup.map((tech, idx) => (
-                <span
-                  key={idx}
-                  className="text-sm text-white/80 whitespace-nowrap"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-            {/* Second group container */}
-            <div ref={techGroup2Ref} className="flex justify-center space-x-4 mb-4">
-              {secondGroup.map((tech, idx) => (
-                <span
-                  key={idx}
-                  className="text-sm text-white/80 whitespace-nowrap"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-            {/* Third group container */}
-            <div ref={techGroup3Ref} className="flex justify-center space-x-4">
-              {thirdGroup.map((tech, idx) => (
-                <span
-                  key={idx}
-                  className="text-sm text-white/80 whitespace-nowrap"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
+        {/* Short technologies overview */}
+        <div className="mt-16 text-center">
+          <h3 className="text-2xl font-semibold mb-6">Technologies & Tools</h3>
+          <div className="flex flex-wrap justify-center gap-3">
+            {['React','Node','TypeScript','Python','Docker','AWS','GraphQL','Web3'].map((t) => (
+              <span key={t} className="tech-pill">{t}</span>
+            ))}
           </div>
         </div>
       </div>

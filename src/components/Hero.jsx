@@ -36,27 +36,36 @@ const Hero = () => {
       '-=0.8'
     );
 
-    // Subtitle animation
+    // Subtitle animation (start shortly after name finishes)
     tl.fromTo(
       subtitleRef.current,
       { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 1, ease: 'power3.out' },
-      '-=0.6'
+      { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' },
+      '+=0.12'
     );
 
-    // CTA animation
-    tl.fromTo(
-      ctaRef.current.children,
-      { opacity: 0, y: 30 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: 'back.out(1.2)',
-      },
-      '-=0.5'
-    );
+    // CTA animation: reveal button first, then small hint text to avoid overlap
+    const ctaChildren = ctaRef.current ? Array.from(ctaRef.current.children) : [];
+    const ctaAnchor = ctaChildren[0];
+    const ctaHint = ctaChildren[1];
+
+    if (ctaAnchor) {
+      tl.fromTo(
+        ctaAnchor,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.85, ease: 'back.out(1.2)' },
+        '+=0.08'
+      );
+    }
+
+    if (ctaHint) {
+      tl.fromTo(
+        ctaHint,
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
+        '+=0.12'
+      );
+    }
 
     // Parallax on scroll
     gsap.to(nameRef.current, {
@@ -118,7 +127,7 @@ const Hero = () => {
         </p>
 
         {/* CTA */}
-        <div ref={ctaRef} className="mt-10">
+        <div ref={ctaRef} className="mt-10 flex flex-col items-center gap-4">
           <a
             href="#projects"
             className="inline-block bg-white text-black px-8 py-4 rounded-full font-medium text-lg hover:bg-gray-200 transition duration-300"
@@ -127,7 +136,7 @@ const Hero = () => {
             Explore My Work
           </a>
           <p
-            className="mt-4 text-sm text-gray-400"
+            className="text-sm text-gray-400"
             style={{ fontFamily: 'SF Pro Text, sans-serif', fontWeight: 400 }}
           >
             Scroll to discover

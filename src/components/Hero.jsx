@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useRef, useEffect } from 'react';
+import HeroCanvas from './HeroCanvas'
 
 const Hero = () => {
   const heroRef = useRef(null);
@@ -75,6 +76,14 @@ const Hero = () => {
       ref={heroRef}
       className="w-full h-screen bg-black text-white flex items-center justify-center relative overflow-hidden"
     >
+      {/* 3D background canvas */}
+      <HeroCanvas />
+
+      {/* soft vignette and gradient overlays */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.0)_0%,rgba(0,0,0,0.85)_70%)]"></div>
+      </div>
       <div className="text-center z-10">
         {/* Full name with space */}
         <h1

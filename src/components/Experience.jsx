@@ -139,16 +139,16 @@ const Experience = () => {
       }
     } catch (e) {}
 
-    // Robustly place each item's dot into the central list so it sits on the vertical timeline
+    // Position each item's dot into the central list using getBoundingClientRect for stability
     const positionDots = () => {
       try {
         if (!listEl) return;
-        // use offsetTop/offsetHeight to compute position relative to list container (stable during scroll)
+        const listRect = listEl.getBoundingClientRect();
         itemsRef.current.forEach((itemEl) => {
           const dot = itemEl.querySelector('.timeline-dot');
           if (!dot) return;
-          const top = itemEl.offsetTop + Math.round(itemEl.offsetHeight / 2) - Math.round(dot.offsetHeight / 2);
-          // style and move into list container
+          const itemRect = itemEl.getBoundingClientRect();
+          const top = Math.round(itemRect.top - listRect.top + itemRect.height / 2 - dot.offsetHeight / 2);
           dot.style.position = 'absolute';
           dot.style.left = '50%';
           dot.style.transform = 'translateX(-50%)';
@@ -160,10 +160,37 @@ const Experience = () => {
       } catch (e) { /* ignore */ }
     };
 
-    // call initially and when layout changes
-    setTimeout(positionDots, 60);
-    window.addEventListener('resize', positionDots);
-    if (ScrollTrigger.addEventListener) ScrollTrigger.addEventListener('refresh', positionDots);
+    // update active indicator based on which item's center is closest to viewport center
+    let ticking = false;
+    const updateActiveIndicator = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        try {
+          const viewportCenter = window.innerHeight / 2;
+          let closest = { idx: -1, dist: Infinity };
+          itemsRef.current.forEach((itemEl, idx) => {
+            const r = itemEl.getBoundingClientRect();
+            const itemCenter = r.top + r.height / 2;
+            const dist = Math.abs(itemCenter - viewportCenter);
+            if (dist < closest.dist) closest = { idx, dist };
+          });
+          if (closest.idx >= 0) {
+            const itemEl = itemsRef.current[closest.idx];
+            moveIndicatorTo(itemEl, closest.idx);
+          }
+        } catch (e) {}
+        ticking = false;
+      });
+    };
+
+    // initial placement and listeners
+    setTimeout(() => { positionDots(); updateActiveIndicator(); }, 60);
+    const onScroll = () => updateActiveIndicator();
+    const onResize = () => { positionDots(); updateActiveIndicator(); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+    if (ScrollTrigger.addEventListener) ScrollTrigger.addEventListener('refresh', () => { positionDots(); updateActiveIndicator(); });
 
     // Micro-parallax / tilt on pointer move (desktop only)
     const supportsPointerFine = window.matchMedia && !window.matchMedia('(pointer: coarse)').matches;
@@ -254,14 +281,16 @@ const Experience = () => {
       if (experienceRef.current && onPointerMove) {
         experienceRef.current.removeEventListener('pointermove', onPointerMove);
       }
-      try { window.removeEventListener('resize', positionDots); } catch (e) {}
+      try { window.removeEventListener('scroll', onScroll); } catch (e) {}
+      try { window.removeEventListener('resize', onResize); } catch (e) {}
       try { ScrollTrigger.removeEventListener && ScrollTrigger.removeEventListener('refresh', positionDots); } catch (e) {}
-      // attempt to move dots back under their items (best-effort)
+      // restore dots back to item nodes where possible
       try {
         itemsRef.current.forEach((itemEl) => {
-          const dot = listEl && listEl.querySelector('.timeline-dot');
-          if (!dot) return;
-          if (itemEl && !itemEl.contains(dot)) itemEl.appendChild(dot);
+          const selector = `.timeline-dot`;
+          const movedDot = listEl && listEl.querySelector(selector);
+          if (!movedDot) return;
+          if (itemEl && !itemEl.contains(movedDot)) itemEl.appendChild(movedDot);
         });
       } catch (e) {}
     };

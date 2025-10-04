@@ -146,7 +146,7 @@ const Projects = () => {
               <div className="card-accent" aria-hidden></div>
               <div className="card-sheen" aria-hidden></div>
               <div className="card-hover-overlay" aria-hidden>
-                <div className="overlay-inner">Open project • View details</div>
+                <div className="overlay-inner">View details</div>
               </div>
               <div className="card-content">
                 <h3 className="text-xl font-semibold mb-2">{p.name}</h3>

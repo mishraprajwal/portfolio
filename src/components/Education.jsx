@@ -11,13 +11,14 @@ const educationData = [
         field: "Computer and Information Science",
         institution: "New Jersey Institute of Technology",
         year: "September 2023 - May 2025",
-        cgpa: '3.6/4.0',
+        
         coursework: [
           'Machine Learning',
-          'Deep Learning',
-          'Advanced Algorithms',
-          'Distributed Systems',
-          'Natural Language Processing'
+          'Data Structures',
+          'Databases',
+          'Opearating Systems',
+          'Web Development',
+          'Big Data'
         ]
     },
     {
@@ -25,13 +26,14 @@ const educationData = [
         field: "Information Technology",
         institution: "University of Mumbai",
         year: "August 2016 - May 2020",
-        cgpa: '7.43/10',
+        
         coursework: [
           'Data Structures',
           'Databases',
-          'Web Development',
-          'Operating Systems',
-          'Computer Networks'
+          'Network Security',
+          'Embedded Systems',
+          'Microcontrollers',
+          'Artifiicial Intelligence'
         ]
     },
 ];
@@ -127,7 +129,7 @@ const Education = () => {
                                 <div className="education-right">
                                     <div className="education-institution">{edu.institution}</div>
                                     <div className="education-year">{edu.year}</div>
-                                    {edu.cgpa && <div className="education-cgpa">CGPA: {edu.cgpa}</div>}
+                                    {/* CGPA removed per request */}
                                 </div>
                             </div>
                                 <div className="education-tags" aria-hidden>

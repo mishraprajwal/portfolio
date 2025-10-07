@@ -6,7 +6,7 @@ const navLinks = {
   LinkedIn: "https://www.linkedin.com/in/prajwalkaruneshmishra/", // Replace with your LinkedIn URL
   Home: "/portfolio/",                                          // Refreshes the home page
   GitHub: "https://github.com/mishraprajwal",          // Replace with your GitHub URL
-  About: "#"                                          // Placeholder for About page
+  About: "/about"                                          // About page route
 };
 
 const Navbar = () => {

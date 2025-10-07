@@ -1,0 +1,82 @@
+/* About page: full-viewport sections and larger, hero-like cards */
+.about-section {
+  min-height: 100vh; /* each section fills the viewport */
+  display: flex;
+  align-items: center; /* center vertically */
+  color: #fff;
+  background: transparent;
+}
+
+.section-inner {
+  width: 100%;
+  padding: 3.5rem 1.5rem;
+}
+
+.about-title {
+  text-align: center;
+  font-size: 2.75rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+/* Section-specific titles */
+.about-section-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+.about-section-sub { color: rgba(255,255,255,0.78); margin-bottom: 0.8rem; }
+.about-section-note { color: rgba(255,255,255,0.75); margin-top: 1rem; max-width: 72ch; }
+
+/* FIFA large counter */
+.fifa-large-counter { font-weight: 800; font-size: 3.5rem; margin: 1rem 0; letter-spacing: -0.02em; }
+
+/* Badges */
+.about-badge, .badge { display: inline-block; background: rgba(255,255,255,0.04); padding: 0.5rem 0.85rem; border-radius: 9999px; margin-right: 0.6rem; margin-bottom: 0.6rem; color: rgba(255,255,255,0.95); }
+
+/* Bars (fitness) */
+.bars { margin-top: 1rem; }
+.bar-row { display: flex; gap: 1rem; align-items: center; margin-bottom: 0.9rem; }
+.bar-label { width: 130px; color: rgba(255,255,255,0.95); font-weight: 600; }
+.bar { flex: 1; background: rgba(255,255,255,0.03); height: 16px; border-radius: 9999px; overflow: hidden; }
+.bar-fill { height: 100%; background: linear-gradient(90deg, rgba(99,102,241,1), rgba(139,92,246,1)); transform-origin: left center; transform: scaleX(0); }
+.bar-value { min-width: 140px; color: rgba(255,255,255,0.85); text-align: right; }
+
+/* Layout for stacked sections (mobile: single column) */
+.about-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+
+/* Card style for inner blocks */
+.about-card { background: rgba(255,255,255,0.03); border-radius: 14px; padding: 2.25rem; box-shadow: 0 28px 80px rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.04); min-height: 260px; }
+
+/* small helpers */
+.centered { text-align: center; }
+
+@media (min-width: 768px) {
+  .about-grid { grid-template-columns: repeat(3, 1fr); }
+  .section-inner { padding: 6rem 2rem; }
+  .fifa-large-counter { font-size: 4rem; }
+}
+
+/* stat item specific */
+.stat-item { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start; }
+.stat-item .about-section-title { font-size: 1.2rem; }
+.stat-item .about-section-sub { font-size: 0.95rem; }
+.record-number { font-weight: 800; font-size: 2.25rem; color: #fff; margin-top: 0.35rem; }
+
+/* small responsive tweaks */
+@media (min-width: 768px) {
+  .stat-item { align-items: flex-start; }
+  .record-number { font-size: 2.6rem; }
+}
+
+/* record pills (header row) */
+.record-row { display: flex; gap: 0.75rem; }
+.record-pill { flex: 1; padding: 0.5rem 0.75rem; border-radius: 6px; text-align: center; font-weight: 700; }
+.record-pill.wins { background: #00c853; color: #08120a; }
+.record-pill.draws { background: #bdbdbd; color: #0b0b0b; }
+.record-pill.losses { background: #ff5252; color: #1b0b0b; }
+
+.record-values { gap: 1.25rem; }
+.record-number.wins, .record-number.draws, .record-number.losses { text-align: center; }
+.winrate-label { color: rgba(255,255,255,0.7); font-weight: 700; }
+.winrate-percent { font-weight: 900; font-size: 1.6rem; color: rgba(255,255,255,0.95); }
+
+@media (min-width: 768px) {
+  .winrate-percent { font-size: 2rem; }
+}

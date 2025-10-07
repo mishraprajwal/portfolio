@@ -18,6 +18,28 @@ const Navbar = () => {
             <a
               key={nav}
               href={navLinks[nav]}
+              onClick={(e) => {
+                // handle internal hash-based nav for Home / About so clicking the same link reloads
+                if (nav === 'Home' || nav === 'About') {
+                  e.preventDefault();
+                  const desired = navLinks[nav] || '#/';
+                  const normalize = (s) => {
+                    if (!s) return '/';
+                    if (s.startsWith('#')) return s.slice(1);
+                    return s;
+                  };
+                  const current = normalize(window.location.hash || window.location.pathname);
+                  const want = normalize(desired);
+                  if (current === want) {
+                    // same page -> force full reload/refresh
+                    try { window.location.reload(); } catch (err) { window.location.hash = desired; }
+                  } else {
+                    // navigate via hash (triggers hashchange listener)
+                    window.location.hash = desired;
+                  }
+                }
+                // external links will follow default behavior
+              }}
               target={nav === "Home" || nav === "About" ? "_self" : "_blank"}
               rel={nav === "Home" || nav === "About" ? undefined : "noopener noreferrer"}
               className="px-5 text-sm cursor-pointer text-gray hover:text-white transition-all"

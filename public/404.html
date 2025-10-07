@@ -12,12 +12,12 @@
         try {
           var path = window.location.pathname || '/';
           var search = window.location.search || '';
-          // Build hash like #/about
+          var parts = path.split('/').filter(Boolean);
+          var base = '/';
+          if (parts.length >= 2) base = '/' + parts[0] + '/' + parts[1] + '/';
           var hash = '#'+ path + search;
-          // Replace current location with root + hash so the SPA can read it
-          window.location.replace(window.location.origin + '/' + hash);
+          window.location.replace(window.location.origin + base + hash);
         } catch (e) {
-          // fallback to root
           window.location.replace('/');
         }
       })();

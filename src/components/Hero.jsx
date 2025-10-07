@@ -123,7 +123,7 @@ const Hero = () => {
           className="mt-6 text-xl md:text-2xl font-light text-gray-500 max-w-xl mx-auto"
           style={{ fontFamily: 'SF Pro Text, sans-serif', fontWeight: 300 }}
         >
-          I'm a software developer based in New York.
+          I'm a software developer based in Seattle.
         </p>
 
         {/* CTA */}

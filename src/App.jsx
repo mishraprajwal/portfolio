@@ -3,6 +3,7 @@ import Hero from './components/Hero';
 import Projects from './components/Projects';
 import Experience from './components/Experience';
 import Footer from './components/Footer';
+import Education from './components/Education';
 
 // import * as Sentry from '@sentry/react';
 
@@ -13,6 +14,7 @@ const App = () => {
       <Hero />
       <Projects />
       <Experience />
+  <Education />
       <Footer />
     </main>
   )

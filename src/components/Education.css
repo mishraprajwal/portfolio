@@ -1,0 +1,146 @@
+/* Education section styles — dark theme, clean layout, subtle depth */
+.education-section {
+  position: relative;
+  background: transparent;
+  color: #fff;
+}
+
+.education-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.6) 60%);
+  filter: blur(36px);
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.education-inner {
+  position: relative;
+}
+
+.education-title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.education-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+}
+
+.education-card {
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: transform 250ms cubic-bezier(.2,.9,.2,1), box-shadow 250ms ease;
+}
+
+.education-card:focus,
+.education-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 22px 40px rgba(0,0,0,0.7);
+}
+
+.education-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.education-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.education-level {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.education-field {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.85);
+  margin-top: 0.25rem;
+}
+
+.education-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* prevent children from stretching full width and keep them right-aligned */
+}
+
+.education-institution {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.education-year {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.education-cgpa {
+  margin-top: 0.5rem;
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.95);
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  display: inline-flex; /* shrink-to-fit and align content */
+  align-items: center;
+  white-space: nowrap; /* keep the label and value on one line */
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.education-description {
+  margin-top: 0.75rem;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.95rem;
+}
+
+.education-tags {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.edu-tag {
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.9);
+  padding: 0.35rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+@media (min-width: 768px) {
+  .education-list {
+    /* Increase the min width per card here to make cards wider on larger screens.
+       Change the 480px value to your preferred minimum card width. */
+    grid-template-columns: repeat(2, minmax(580px, 1fr));
+  }
+  .education-title {
+    font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .education-inner {
+    padding: 3.5rem 0;
+  }
+  .education-card {
+    padding: 2rem;
+    /* On very large screens you can also cap the card width here */
+    max-width: 760px; /* change this value to make cards wider/narrower */
+    margin: 0 auto; /* keeps cards centered inside each grid column */
+  }
+}

@@ -5,7 +5,14 @@ import AboutPage from './AboutPage.jsx'
 import './index.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
+// Read pathname, but prefer hash-based route if GitHub Pages 404 redirected here
+let pathname = '/';
+if (typeof window !== 'undefined') {
+  // If the 404 redirect added a hash like #/about, prefer that
+  const hash = window.location.hash || '';
+  if (hash && hash.startsWith('#/')) pathname = hash.slice(1); // '/about'
+  else pathname = window.location.pathname || '/';
+}
 
 root.render(
   <React.StrictMode>

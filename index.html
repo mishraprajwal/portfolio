@@ -8,6 +8,32 @@
   </head>
   <body>
     <div id="root"></div>
+    <div id="__error_overlay__" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);color:#fff;padding:24px;font-family:monospace;overflow:auto;">
+      <h2 style="margin-top:0;color:#ff6b6b;">Runtime error</h2>
+      <pre id="__error_overlay_msg__" style="white-space:pre-wrap;word-break:break-word;"></pre>
+    </div>
+    <script>
+      window.addEventListener('error', function (ev) {
+        try {
+          var o = document.getElementById('__error_overlay__');
+          var m = document.getElementById('__error_overlay_msg__');
+          if (o && m) {
+            m.textContent = (ev && ev.error && ev.error.stack) ? ev.error.stack : (ev && ev.message) || String(ev);
+            o.style.display = 'block';
+          }
+        } catch (e) { console.error(e); }
+      });
+      window.addEventListener('unhandledrejection', function (ev) {
+        try {
+          var o = document.getElementById('__error_overlay__');
+          var m = document.getElementById('__error_overlay_msg__');
+          if (o && m) {
+            m.textContent = (ev && ev.reason && ev.reason.stack) ? ev.reason.stack : JSON.stringify(ev.reason || ev);
+            o.style.display = 'block';
+          }
+        } catch (e) { console.error(e); }
+      });
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

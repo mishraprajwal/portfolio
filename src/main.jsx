@@ -8,3 +8,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>,
 )
+
+// debug mount
+console.log('[app] mounting complete');

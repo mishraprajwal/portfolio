@@ -83,7 +83,7 @@ const Projects = () => {
         }
       );
 
-      // Add mouse tilt for each card
+  // Add mouse tilt for each card
       cards.forEach((card) => {
         let rmFn = null;
         const handleMove = (e) => {
@@ -119,6 +119,71 @@ const Projects = () => {
     };
   }, []);
 
+  // horizontal scroll mapping: vertical scroll -> horizontal translate of the projects track
+  useEffect(() => {
+    const container = projectsRef.current;
+    const track = gridRef.current;
+    if (!container || !track) return;
+
+    const update = () => {
+      const cards = Array.from(track.children);
+      if (!cards || cards.length === 0) return null;
+
+    // compute horizontal distance so the last card's left aligns with the first card's left
+    const first = cards[0];
+    const last = cards[cards.length - 1];
+
+  // Robust baseline: amount of horizontal content that can scroll inside the wrapper
+  // Use the track's parent (the centered `.max-w-7xl` wrapper) because the track sits
+  // inside that constrained width. Fallback to the section/container width if unavailable.
+  const wrapper = track.parentElement || container;
+  const visibleWidth = wrapper.clientWidth || container.clientWidth;
+  const baseline = Math.max(0, track.scrollWidth - visibleWidth);
+
+  // Responsive desired gap (pixels) to leave between the last card and the right edge
+  const vw = window.innerWidth;
+  let desiredGapPx = 36; // default for large screens
+  if (vw < 640) desiredGapPx = 12; // small phones
+  else if (vw < 1024) desiredGapPx = 20; // tablets / small laptops
+
+  // Subtract desiredGapPx from baseline so last card remains fully visible with breathing room
+  const totalScroll = Math.max(0, Math.round(baseline - desiredGapPx));
+  if (totalScroll <= 0) return null;
+
+    // small extra vertical breathing room to avoid abrupt unpin (tuned low to minimize gap)
+    const extra = Math.round(window.innerHeight * 0.3);
+
+      // tween to move track left by totalScroll px
+      const tween = gsap.to(track, { x: -totalScroll, ease: 'none', paused: true });
+
+      const st = ScrollTrigger.create({
+        trigger: container,
+        start: 'top top',
+        end: `+=${totalScroll + extra}`,
+        pin: true,
+        scrub: 0.7,
+        onUpdate(self) {
+          const p = self.progress || 0;
+          tween.progress(p);
+        }
+      });
+
+      return () => {
+        try { tween.kill(); } catch (e) {}
+        try { st.kill(); } catch (e) {}
+      };
+    };
+
+    const cleanup = update();
+    // refresh on resize (use named handler so we can remove it)
+    const onResize = () => { ScrollTrigger.refresh(); };
+    window.addEventListener('resize', onResize);
+    return () => {
+      if (cleanup) cleanup();
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
+
   return (
     <section
       ref={projectsRef}
@@ -134,11 +199,11 @@ const Projects = () => {
           Selected Work
         </h2>
 
-        <div ref={gridRef} className="projects-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div ref={gridRef} className="projects-track flex gap-8 items-stretch">
           {projects.map((p, i) => (
             <article
               key={i}
-              className="project-card group perspective-800"
+              className="project-card group perspective-800 flex-none w-[360px] md:w-[480px] lg:w-[560px] h-[420px]"
               tabIndex={0}
               role="button"
               onClick={() => window.open(p.github, '_blank')}
@@ -156,22 +221,9 @@ const Projects = () => {
                     <span key={id} className="tech-badge">{t}</span>
                   ))}
                 </div>
+                {/* actions removed (View Code / Open) per design */}
                 <div className="flex items-center gap-3 mt-auto">
-                  <a
-                    href={p.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-gray-200 hover:text-white underline"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    View Code
-                  </a>
-                  <button
-                    className="visit-btn ml-auto"
-                    onClick={(e) => { e.stopPropagation(); window.open(p.github, '_blank'); }}
-                  >
-                    Open
-                  </button>
+                  <span className="text-sm text-gray-400">&nbsp;</span>
                 </div>
               </div>
             </article>

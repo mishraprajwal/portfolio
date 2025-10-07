@@ -4,9 +4,9 @@ import { navLists } from '../constants';
 const navLinks = {
   Email: "mailto:prajwalm882@gmail.com",           // Replace with your email
   LinkedIn: "https://www.linkedin.com/in/prajwalkaruneshmishra/", // Replace with your LinkedIn URL
-  Home: "/portfolio/",                                          // Refreshes the home page
+  Home: "#/",                                          // Refreshes the home page (hash-based for GH Pages)
   GitHub: "https://github.com/mishraprajwal",          // Replace with your GitHub URL
-  About: "/about"                                          // About page route
+  About: "#/about"                                          // About page route (hash-based)
 };
 
 const Navbar = () => {

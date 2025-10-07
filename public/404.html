@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Redirecting…</title>
+    <meta http-equiv="refresh" content="0; url=/" />
+    <script>
+      // GitHub Pages 404 fallback for single-page apps.
+      // Preserve the attempted path and redirect to index.html using a hash.
+      (function () {
+        try {
+          var path = window.location.pathname || '/';
+          var search = window.location.search || '';
+          // Build hash like #/about
+          var hash = '#'+ path + search;
+          // Replace current location with root + hash so the SPA can read it
+          window.location.replace(window.location.origin + '/' + hash);
+        } catch (e) {
+          // fallback to root
+          window.location.replace('/');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    Redirecting…
+  </body>
+</html>

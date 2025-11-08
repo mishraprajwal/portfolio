@@ -12,10 +12,22 @@ const Projects = () => {
 
   const projects = [
     {
-      name: 'Real-Time Admin Dashboard',
-      github: 'https://github.com/mishraprajwal/CRMDashboard',
-      techStack: ['TypeScript', 'React', 'GraphQL'],
-      desc: 'Fast analytics and real-time updates for business operations.',
+      name: 'Hierarchical Root Cause Analysis',
+      github: 'https://github.com/mishraprajwal/rca',
+      techStack: ['Python', 'Machine Learning', 'Data Analysis'],
+      desc: 'Automated root cause analysis tool for system failures.',
+    },
+    {
+      name: 'AI Code Review Assistant',
+      github: 'https://github.com/mishraprajwal/ai-code-review-assistant',
+      techStack: ['Python', 'Java Spring Boot', 'Flask', 'React'],
+      desc: 'AI-powered code review assistant for better code quality.',
+    },
+    {
+      name: 'Lecture Summarizer',
+      github: 'https://github.com/mishraprajwal/lecture-summarizer',
+      techStack: ['Python', 'Flask', 'Open AI', 'NLP'],
+      desc: 'Automatic lecture summarization using natural language processing.',
     },
     {
       name: 'Web3 CrowdFunding Platform',
@@ -34,12 +46,6 @@ const Projects = () => {
       github: 'https://github.com/mishraprajwal/sushi',
       techStack: ['JavaScript', 'HTML', 'CSS'],
       desc: 'A polished frontend demo with delightful micro-interactions.',
-    },
-    {
-      name: 'ChatBot',
-      github: 'https://github.com/mishraprajwal/ChatBot',
-      techStack: ['TypeScript', 'React', 'Node'],
-      desc: 'Conversational agent with intent detection and context.',
     },
   ];
 

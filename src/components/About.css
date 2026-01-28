@@ -59,10 +59,49 @@
 .stat-item .about-section-sub { font-size: 0.95rem; }
 .record-number { font-weight: 800; font-size: 2.25rem; color: #fff; margin-top: 0.35rem; }
 
-/* small responsive tweaks */
-@media (min-width: 768px) {
-  .stat-item { align-items: flex-start; }
-  .record-number { font-size: 2.6rem; }
+/* Real Madrid section */
+.realmadrid-content { margin-bottom: 2rem; line-height: 1.6; }
+.realmadrid-image { text-align: center; margin-bottom: 1rem; }
+.stadium-image { width: 100%; max-width: 500px; height: auto; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.realmadrid-card { 
+  background: #000000; /* Pure black background */
+  border-radius: 20px; 
+  padding: 3rem; 
+  box-shadow: 
+    20px 20px 40px rgba(0, 0, 0, 0.7), 
+    -20px -20px 40px rgba(30, 41, 59, 0.3), 
+    inset 5px 5px 10px rgba(255, 255, 255, 0.05), 
+    inset -5px -5px 10px rgba(0, 0, 0, 0.5); 
+  position: relative; 
+  overflow: hidden; 
+  color: #fff; 
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.fitness-card { background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(59,130,246,0.1)); border: 1px solid rgba(59,130,246,0.2); border-radius: 16px; padding: 2rem; box-shadow: 0 25px 80px rgba(59,130,246,0.2); }
+
+.principles-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.principles-list li {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid rgba(255,215,0,0.6); /* Gold accent for Real Madrid */
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.principles-list li:hover {
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 /* record pills (header row) */

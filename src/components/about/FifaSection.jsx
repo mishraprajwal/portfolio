@@ -44,9 +44,9 @@ export default function FifaSection() {
     const inner = el.querySelector('.section-inner');
     const counter = el.querySelector('.fifa-large-counter');
 
-    // staggered reveal for text and stats, subtle lift + fade like Apple's product sections
+    // staggered reveal for text and stats, with 3D lift
     if (inner) {
-      safeGsapFromTo(inner, { y: 28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
+      safeGsapFromTo(inner, { y: 40, rotationX: -10, autoAlpha: 0 }, { y: 0, rotationX: 0, autoAlpha: 1, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
     }
 
   // pulse the counter slightly when it changes
@@ -115,11 +115,11 @@ export default function FifaSection() {
       ['wins', 'records'].forEach((k) => { if (intervalsRef.current[k]) { clearInterval(intervalsRef.current[k]); intervalsRef.current[k] = null; } });
     };
 
-    // reveal the stats row with a left-to-right slide
+    // reveal the stats row with a 3D slide and scale
     try {
       const items = el.querySelectorAll('.stat-item');
       if (items && items.length) {
-        safeGsapFromTo(items, { x: -26, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.7, stagger: 0.12, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 82%' } });
+        safeGsapFromTo(items, { x: -50, scale: 0.8, rotationY: -20, autoAlpha: 0 }, { x: 0, scale: 1, rotationY: 0, autoAlpha: 1, duration: 0.9, stagger: 0.15, ease: 'back.out(1.7)', scrollTrigger: { trigger: el, start: 'top 82%' } });
       }
     } catch (err) {
       // swallow - don't break the page

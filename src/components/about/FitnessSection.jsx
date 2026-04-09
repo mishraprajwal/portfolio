@@ -30,7 +30,7 @@ export default function FitnessSection() {
       start: 'top 85%',
       onEnter: () => {
         gsap.to({ val: 0 }, {
-          val: 6.5,
+          val: 5.2,
           duration: 2,
           ease: 'power2.out',
           onUpdate: function() {
@@ -38,7 +38,7 @@ export default function FitnessSection() {
           }
         });
         gsap.to({ val: 0 }, {
-          val: 15,
+          val: 11.1,
           duration: 2,
           ease: 'power2.out',
           onUpdate: function() {

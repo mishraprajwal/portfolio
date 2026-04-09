@@ -324,22 +324,18 @@ location { color: rgba(255,255,255,0.65); }
 }
 .timeline-indicator { display: none; }
 .timeline-advanced-list { position: relative; }
-.timeline-advanced-item { position: relative; width: calc(50% - 4rem); padding: 1.25rem; margin-bottom: 3.5rem; }
+.timeline-advanced-item { position: relative; width: 100%; padding: 0; margin-bottom: 0; }
 .timeline-advanced-item.left { left: 0; text-align: right; transform-origin: right center; }
 .timeline-advanced-item.right { left: 50%; transform-origin: left center; }
 .timeline-advanced-item .timeline-dot { display: none; }
-.timeline-advanced-item .timeline-card { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.06); padding: 1rem; border-radius: 12px; backdrop-filter: blur(6px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); transition: transform 300ms ease, box-shadow 300ms ease; }
-.timeline-advanced-item:hover .timeline-card { transform: translateY(-6px) scale(1.01); box-shadow: 0 22px 60px rgba(0,0,0,0.65); }
+.timeline-advanced-item .timeline-card { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.06); padding: 1.5rem; border-radius: 12px; backdrop-filter: blur(6px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
 .timeline-advanced-item .card-header { display:flex; justify-content: space-between; align-items: center; gap: 1rem; }
 .company-meta { display:flex; align-items: center; gap: 0.75rem; }
 .company-info { display:flex; flex-direction: column; text-align: left; }
 .role-title { font-size: 0.95rem; color: rgba(255,255,255,0.9); margin-top: 2px; }
 
 /* Active duration badge shimmer */
-.timeline-advanced-item.active .duration-badge { box-shadow: 0 18px 50px rgba(2,6,23,0.6); transform: translateY(-2px); }
-.duration-badge::after { content: ''; position: absolute; inset: 0; border-radius: 12px; pointer-events: none; background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06), rgba(255,255,255,0.02)); opacity: 0; transition: opacity 260ms ease; }
-.timeline-advanced-item.active .duration-badge::after { opacity: 1; }
-.duration-badge { background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); color: rgba(255,255,255,0.95); padding: 0.3rem 0.55rem; border-radius: 8px; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.04); box-shadow: 0 6px 18px rgba(2,6,23,0.6); margin-left: auto; }
+.duration-badge { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-left: auto; }
 .location { margin-left: auto; text-align: right; color: rgba(255,255,255,0.65); }
 .card-summary { text-align: left; }
 .timeline-advanced-item .card-body { margin-top: 0.6rem; }

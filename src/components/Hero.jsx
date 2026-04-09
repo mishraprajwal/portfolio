@@ -7,7 +7,6 @@ const Hero = () => {
   const heroRef = useRef(null);
   const nameRef = useRef(null);
   const subtitleRef = useRef(null);
-  const ctaRef = useRef(null);
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
@@ -43,29 +42,6 @@ const Hero = () => {
       { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' },
       '+=0.12'
     );
-
-    // CTA animation: reveal button first, then small hint text to avoid overlap
-    const ctaChildren = ctaRef.current ? Array.from(ctaRef.current.children) : [];
-    const ctaAnchor = ctaChildren[0];
-    const ctaHint = ctaChildren[1];
-
-    if (ctaAnchor) {
-      tl.fromTo(
-        ctaAnchor,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.85, ease: 'back.out(1.2)' },
-        '+=0.08'
-      );
-    }
-
-    if (ctaHint) {
-      tl.fromTo(
-        ctaHint,
-        { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
-        '+=0.12'
-      );
-    }
 
     // Parallax on scroll
     gsap.to(nameRef.current, {
@@ -125,23 +101,6 @@ const Hero = () => {
         >
           I'm a software developer based in Seattle.
         </p>
-
-        {/* CTA */}
-        <div ref={ctaRef} className="mt-10 flex flex-col items-center gap-4">
-          <a
-            href="#projects"
-            className="inline-block bg-white text-black px-8 py-4 rounded-full font-medium text-lg hover:bg-gray-200 transition duration-300"
-            style={{ fontFamily: 'SF Pro Text, sans-serif', fontWeight: 500 }}
-          >
-            Explore My Work
-          </a>
-          <p
-            className="text-sm text-gray-400"
-            style={{ fontFamily: 'SF Pro Text, sans-serif', fontWeight: 400 }}
-          >
-            Scroll to discover
-          </p>
-        </div>
       </div>
 
       <div className="absolute inset-0 bg-black opacity-30 pointer-events-none"></div>

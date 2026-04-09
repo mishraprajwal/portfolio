@@ -1,5 +1,4 @@
 import { useRef, useEffect } from 'react';
-import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import '../index.css';
@@ -7,7 +6,8 @@ import '../index.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const Projects = () => {
-  const projectsRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const stickyRef = useRef(null);
   const gridRef = useRef(null);
 
   const projects = [
@@ -49,200 +49,162 @@ const Projects = () => {
     },
   ];
 
-  useGSAP(() => {
-    if (!projectsRef.current) return;
-
-    // Title reveal
-    gsap.fromTo(
-      '#projects-title',
-      { opacity: 0, y: 40 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: projectsRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-      }
-    );
-
-    // Cards entrance stagger
-    if (gridRef.current) {
-      const cards = Array.from(gridRef.current.children);
-      gsap.fromTo(
-        cards,
-        { opacity: 0, y: 36, scale: 0.98 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.9,
-          stagger: 0.08,
-          ease: 'expo.out',
-          scrollTrigger: {
-            trigger: projectsRef.current,
-            start: 'top 80%',
-          },
-        }
-      );
-
-  // Add mouse tilt for each card
-      cards.forEach((card) => {
-        let rmFn = null;
-        const handleMove = (e) => {
-          const rect = card.getBoundingClientRect();
-          const px = (e.clientX - rect.left) / rect.width;
-          const py = (e.clientY - rect.top) / rect.height;
-          const rx = (py - 0.5) * 10; // degrees
-          const ry = (px - 0.5) * -10;
-          gsap.to(card, { rotationX: rx, rotationY: ry, scale: 1.02, transformPerspective: 800, duration: 0.5, ease: 'power3.out' });
-        };
-        const handleLeave = () => {
-          gsap.to(card, { rotationX: 0, rotationY: 0, scale: 1, duration: 0.6, ease: 'power3.out' });
-        };
-        card.addEventListener('mousemove', handleMove);
-        card.addEventListener('mouseleave', handleLeave);
-        rmFn = () => {
-          card.removeEventListener('mousemove', handleMove);
-          card.removeEventListener('mouseleave', handleLeave);
-        };
-        // store cleanup on dom node
-        card.__cleanup = rmFn;
-      });
-    }
-  }, []);
-
-  // cleanup when unmount
   useEffect(() => {
-    return () => {
-      if (gridRef.current) {
-        Array.from(gridRef.current.children).forEach((c) => { if (c.__cleanup) c.__cleanup(); });
-      }
-      try { ScrollTrigger.getAll().forEach((s) => s.kill()); } catch (e) {}
-    };
-  }, []);
-
-  // horizontal scroll mapping: vertical scroll -> horizontal translate of the projects track
-  useEffect(() => {
-    const container = projectsRef.current;
+    const wrapper = wrapperRef.current;
     const track = gridRef.current;
-    if (!container || !track) return;
+    if (!wrapper || !track) return;
 
-    const update = () => {
-      const cards = Array.from(track.children);
-      if (!cards || cards.length === 0) return null;
+    const cards = Array.from(track.children);
+    if (!cards.length) return;
 
-    // compute horizontal distance so the last card's left aligns with the first card's left
-    const first = cards[0];
-    const last = cards[cards.length - 1];
+    let ctx;
 
-  // Robust baseline: amount of horizontal content that can scroll inside the wrapper
-  // Use the track's parent (the centered `.max-w-7xl` wrapper) because the track sits
-  // inside that constrained width. Fallback to the section/container width if unavailable.
-  const wrapper = track.parentElement || container;
-  const visibleWidth = wrapper.clientWidth || container.clientWidth;
-  const baseline = Math.max(0, track.scrollWidth - visibleWidth);
+    const setup = () => {
+      if (ctx) ctx.revert();
 
-  // Responsive desired gap (pixels) to leave between the last card and the right edge
-  const vw = window.innerWidth;
-  let desiredGapPx = 36; // default for large screens
-  if (vw < 640) desiredGapPx = 12; // small phones
-  else if (vw < 1024) desiredGapPx = 20; // tablets / small laptops
+      const mobile = window.innerWidth < 768;
 
-  // Subtract desiredGapPx from baseline so last card remains fully visible with breathing room
-  const totalScroll = Math.max(0, Math.round(baseline - desiredGapPx));
-  if (totalScroll <= 0) return null;
+      ctx = gsap.context(() => {
+        // Title reveal
+        gsap.fromTo(
+          '#projects-title',
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: wrapper, start: 'top 85%', toggleActions: 'play none none none' },
+          }
+        );
 
-    // small extra vertical breathing room to avoid abrupt unpin (tuned low to minimize gap)
-    const extra = Math.round(window.innerHeight * 0.3);
+        if (mobile) {
+          cards.forEach((card) => {
+            gsap.fromTo(card, { opacity: 0, y: 40 }, {
+              opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+              scrollTrigger: { trigger: card, start: 'top 90%', toggleActions: 'play none none none' },
+            });
+          });
+        } else {
+          // Entrance stagger
+          gsap.fromTo(cards, { opacity: 0, y: 36, scale: 0.98 }, {
+            opacity: 1, y: 0, scale: 1, duration: 0.9, stagger: 0.08, ease: 'expo.out',
+            scrollTrigger: { trigger: wrapper, start: 'top 80%' },
+          });
 
-      // tween to move track left by totalScroll px
-      const tween = gsap.to(track, { x: -totalScroll, ease: 'none', paused: true });
+          // Horizontal scroll via sticky — no pin needed
+          const visibleWidth = track.parentElement.clientWidth;
+          const totalScroll = Math.max(0, track.scrollWidth - visibleWidth);
 
-      const st = ScrollTrigger.create({
-        trigger: container,
-        start: 'top top',
-        end: `+=${totalScroll + extra}`,
-        pin: true,
-        scrub: 0.7,
-        onUpdate(self) {
-          const p = self.progress || 0;
-          tween.progress(p);
+          if (totalScroll > 0) {
+            // Set wrapper height to create scroll room
+            const scrollRoom = totalScroll * 1.4;
+            wrapper.style.height = `${window.innerHeight + scrollRoom}px`;
+
+            gsap.to(track, {
+              x: -totalScroll,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: wrapper,
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 1,
+              },
+            });
+          }
+
+          // Mouse tilt
+          cards.forEach((card) => {
+            const handleMove = (e) => {
+              const rect = card.getBoundingClientRect();
+              const px = (e.clientX - rect.left) / rect.width;
+              const py = (e.clientY - rect.top) / rect.height;
+              gsap.to(card, { rotationX: (py - 0.5) * 10, rotationY: (px - 0.5) * -10, scale: 1.02, transformPerspective: 800, duration: 0.5, ease: 'power3.out' });
+            };
+            const handleLeave = () => {
+              gsap.to(card, { rotationX: 0, rotationY: 0, scale: 1, duration: 0.6, ease: 'power3.out' });
+            };
+            card.addEventListener('mousemove', handleMove);
+            card.addEventListener('mouseleave', handleLeave);
+            card.__cleanup = () => {
+              card.removeEventListener('mousemove', handleMove);
+              card.removeEventListener('mouseleave', handleLeave);
+            };
+          });
         }
-      });
-
-      return () => {
-        try { tween.kill(); } catch (e) {}
-        try { st.kill(); } catch (e) {}
-      };
+      }, wrapper);
     };
 
-    const cleanup = update();
-    // refresh on resize (use named handler so we can remove it)
-    const onResize = () => { ScrollTrigger.refresh(); };
+    const raf = requestAnimationFrame(setup);
+
+    let resizeTimer;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        cards.forEach((c) => { if (c.__cleanup) { c.__cleanup(); delete c.__cleanup; } });
+        // Reset wrapper height before re-measuring
+        wrapper.style.height = '';
+        setup();
+      }, 200);
+    };
     window.addEventListener('resize', onResize);
+
     return () => {
-      if (cleanup) cleanup();
+      cancelAnimationFrame(raf);
+      clearTimeout(resizeTimer);
       window.removeEventListener('resize', onResize);
+      cards.forEach((c) => { if (c.__cleanup) { c.__cleanup(); delete c.__cleanup; } });
+      wrapper.style.height = '';
+      if (ctx) ctx.revert();
     };
   }, []);
 
   return (
-    <section
-      ref={projectsRef}
-      id="projects"
-      className="w-full min-h-screen bg-transparent text-white overflow-hidden flex items-center"
-    >
-      <div className="max-w-7xl mx-auto px-6 py-20 relative">
-        <h2
-          id="projects-title"
-          className="text-4xl md:text-5xl font-semibold text-center mb-12"
-          style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
-        >
-          Selected Work
-        </h2>
+    <section ref={wrapperRef} id="projects" className="w-full bg-black text-white relative">
+      <div ref={stickyRef} className="sticky top-0 h-screen flex items-center overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 py-20 relative w-full">
+          <h2
+            id="projects-title"
+            className="text-4xl md:text-5xl font-semibold text-center mb-12"
+            style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
+          >
+            Selected Work
+          </h2>
 
-        <div ref={gridRef} className="projects-track flex gap-8 items-stretch">
-          {projects.map((p, i) => (
-            <article
-              key={i}
-              className="project-card group perspective-800 flex-none w-[360px] md:w-[480px] lg:w-[560px] h-[420px]"
-              tabIndex={0}
-              role="button"
-              onClick={() => window.open(p.github, '_blank')}
-            >
-              <div className="card-accent" aria-hidden></div>
-              <div className="card-sheen" aria-hidden></div>
-              <div className="card-hover-overlay" aria-hidden>
-                <div className="overlay-inner">View details</div>
-              </div>
-              <div className="card-content">
-                <h3 className="text-xl font-semibold mb-2">{p.name}</h3>
-                <p className="text-sm text-gray-300 mb-4">{p.desc}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {p.techStack.map((t, id) => (
-                    <span key={id} className="tech-badge">{t}</span>
-                  ))}
+          <div ref={gridRef} className="flex flex-col gap-6 md:flex-row md:gap-8 md:items-stretch">
+            {projects.map((p, i) => (
+              <article
+                key={i}
+                className="project-card group perspective-800 w-full md:flex-none md:w-[480px] lg:w-[560px]"
+                tabIndex={0}
+                role="button"
+                onClick={() => window.open(p.github, '_blank')}
+              >
+                <div className="card-accent" aria-hidden></div>
+                <div className="card-sheen" aria-hidden></div>
+                <div className="card-hover-overlay" aria-hidden>
+                  <div className="overlay-inner">View details</div>
                 </div>
-                {/* actions removed (View Code / Open) per design */}
-                <div className="flex items-center gap-3 mt-auto">
-                  <span className="text-sm text-gray-400">&nbsp;</span>
+                <div className="card-content">
+                  <h3 className="text-xl font-semibold mb-2">{p.name}</h3>
+                  <p className="text-sm text-gray-300 mb-4">{p.desc}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {p.techStack.map((t, id) => (
+                      <span key={id} className="tech-badge">{t}</span>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-3 mt-auto">
+                    <span className="text-sm text-gray-400">&nbsp;</span>
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        {/* Short technologies overview */}
-        <div className="mt-16 text-center">
-          <h3 className="text-2xl font-semibold mb-6">Technologies & Tools</h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {['React','Node','TypeScript','Python','Docker','AWS','GraphQL','Web3'].map((t) => (
-              <span key={t} className="tech-pill">{t}</span>
+              </article>
             ))}
+          </div>
+
+          <div className="mt-16 text-center">
+            <h3 className="text-2xl font-semibold mb-6">Technologies & Tools</h3>
+            <div className="flex flex-wrap justify-center gap-3">
+              {['React','Node','TypeScript','Python','Docker','AWS','GraphQL','Web3'].map((t) => (
+                <span key={t} className="tech-pill">{t}</span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -158,17 +158,17 @@ const Projects = () => {
 
   return (
     <section ref={wrapperRef} id="projects" className="w-full bg-black text-white relative">
-      <div ref={stickyRef} className="sticky top-0 h-screen flex items-center overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 py-20 relative w-full">
+      <div ref={stickyRef} className="md:sticky md:top-0 md:h-screen flex items-center overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-20 relative w-full">
           <h2
             id="projects-title"
-            className="text-4xl md:text-5xl font-semibold text-center mb-12"
+            className="text-3xl md:text-5xl font-semibold text-center mb-8 md:mb-12"
             style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
           >
             Selected Work
           </h2>
 
-          <div ref={gridRef} className="flex flex-col gap-6 md:flex-row md:gap-8 md:items-stretch">
+          <div ref={gridRef} className="grid grid-cols-1 gap-5 md:flex md:flex-row md:gap-8 md:items-stretch">
             {projects.map((p, i) => (
               <article
                 key={i}

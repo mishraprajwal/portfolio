@@ -111,31 +111,31 @@ export default function Experience() {
 
   return (
     <section ref={wrapperRef} id="experience" className="w-full bg-black text-white relative">
-      <div className="sticky top-0 h-screen flex flex-col justify-center items-center px-4">
+      <div className="sticky top-0 min-h-screen flex flex-col justify-center items-center px-4 py-16 md:py-0 md:h-screen">
         <div className="w-full max-w-2xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-semibold text-center mb-10">Career & Experience</h2>
+          <h2 className="text-3xl md:text-5xl font-semibold text-center mb-8 md:mb-10">Career & Experience</h2>
 
         <div className="space-y-6 w-full">
           {baseData.map((exp, idx) => (
             <article key={idx} ref={addCard} className="timeline-advanced-item">
-              <div className="timeline-card p-6 md:p-8 bg-white/[0.03] rounded-xl border border-white/[0.04] flex flex-col justify-between shadow-[0_10px_28px_rgba(0,0,0,0.6)]" style={{ transformStyle: 'preserve-3d', willChange: 'transform', transformOrigin: 'center center' }}>
+              <div className="timeline-card p-5 md:p-8 bg-white/[0.03] rounded-xl border border-white/[0.04] flex flex-col justify-between shadow-[0_10px_28px_rgba(0,0,0,0.6)]" style={{ transformStyle: 'preserve-3d', willChange: 'transform', transformOrigin: 'center center' }}>
                 <div>
-                  <div className="card-header flex items-center justify-between mb-1">
+                  <div className="card-header flex flex-col md:flex-row md:items-center md:justify-between mb-1 gap-1">
                     <div className="company-info">
                       <h3 className="company-name text-lg md:text-xl font-bold">{exp.company}</h3>
                       <p className="role-title text-sm opacity-85 mt-1">{exp.role}</p>
                     </div>
-                    <div className="text-right shrink-0">
-                      <span className="text-sm text-white/60">{exp.period}</span>
-                      <p className="text-sm text-white/50 mt-1">{exp.location}</p>
+                    <div className="md:text-right shrink-0 mt-2 md:mt-0">
+                      <span className="text-xs md:text-sm text-white/60">{exp.period}</span>
+                      <p className="text-xs md:text-sm text-white/50 mt-0.5 md:mt-1">{exp.location}</p>
                     </div>
                   </div>
-                  <p className="mt-5 text-sm md:text-base opacity-70 leading-relaxed">{exp.summary}</p>
+                  <p className="mt-4 md:mt-5 text-sm md:text-base opacity-70 leading-relaxed">{exp.summary}</p>
                 </div>
                 {exp.stack && (
-                  <div className="mt-6 flex flex-wrap gap-2">
+                  <div className="mt-4 md:mt-6 flex flex-wrap gap-2">
                     {exp.stack.map((tech, i) => (
-                      <span key={i} className="px-3 py-1 text-xs font-medium rounded-full bg-white/[0.04] text-white/80 border border-white/[0.08]">
+                      <span key={i} className="px-2.5 py-0.5 md:px-3 md:py-1 text-xs font-medium rounded-full bg-white/[0.04] text-white/80 border border-white/[0.08]">
                         {tech}
                       </span>
                     ))}

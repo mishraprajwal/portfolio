@@ -72,10 +72,10 @@ function buildHeatmapData(calendar) {
 
 function getColor(count) {
   if (count === 0) return 'rgba(255,255,255,0.04)';
-  if (count <= 2) return 'rgba(74,222,128,0.2)';
-  if (count <= 5) return 'rgba(74,222,128,0.4)';
-  if (count <= 10) return 'rgba(74,222,128,0.6)';
-  return 'rgba(74,222,128,0.85)';
+  if (count <= 2) return 'rgba(74,222,128,0.35)';
+  if (count <= 5) return 'rgba(74,222,128,0.5)';
+  if (count <= 10) return 'rgba(74,222,128,0.7)';
+  return 'rgba(74,222,128,0.9)';
 }
 
 function getMonthLabels(weeks) {
@@ -197,7 +197,7 @@ export default function DSASection() {
         </div>
 
         {/* ── GitHub-style Heatmap ── */}
-        <div className="dsa-reveal rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 sm:p-4 md:p-5 overflow-x-auto">
+        <div className="dsa-reveal rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 sm:p-4 md:p-5 overflow-x-auto w-fit mx-auto max-w-full">
 
           {/* Summary row */}
           <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between gap-1 sm:gap-2 mb-3 sm:mb-4">
@@ -210,35 +210,41 @@ export default function DSASection() {
             </div>
           </div>
 
-          {/* Month labels */}
-          <div className="relative h-4 mb-1" style={{ minWidth: 'max-content' }}>
-            {monthLabels.map((m, i) => (
-              <span
-                key={i}
-                className="text-[9px] md:text-[10px] text-white/30 absolute"
-                style={{ left: `${(m.index / weeks.length) * 100}%` }}
-              >
-                {m.label}
-              </span>
-            ))}
-          </div>
+          {/* Month labels + Grid — wrapped together so they share the same intrinsic width */}
+          <div style={{ minWidth: 'max-content' }}>
+            {/* Month labels row — uses a flex grid mirroring the columns below */}
+            <div className="flex gap-[2px] sm:gap-[3px] mb-1 h-4">
+              {weeks.map((week, wi) => {
+                const ml = monthLabels.find(m => m.index === wi);
+                return (
+                  <div key={wi} className="w-[7px] sm:w-[11px] shrink-0 relative">
+                    {ml && (
+                      <span className="text-[9px] md:text-[10px] text-white/30 absolute left-0 whitespace-nowrap">
+                        {ml.label}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
 
-          {/* Grid */}
-          <div className="heatmap-grid flex gap-[2px] sm:gap-[3px]" style={{ minWidth: 'max-content' }}>
-            {weeks.map((week, wi) => (
-              <div key={wi} className="flex flex-col gap-[2px] sm:gap-[3px]">
-                {week.map((day, di) => (
-                  <div
-                    key={di}
-                    className="heatmap-cell rounded-[2px] w-[7px] h-[7px] sm:w-[11px] sm:h-[11px]"
-                    style={{
-                      backgroundColor: getColor(day.count),
-                    }}
-                    title={`${day.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}: ${day.count} submission${day.count !== 1 ? 's' : ''}`}
-                  />
-                ))}
-              </div>
-            ))}
+            {/* Grid */}
+            <div className="heatmap-grid flex gap-[2px] sm:gap-[3px]">
+              {weeks.map((week, wi) => (
+                <div key={wi} className="flex flex-col gap-[2px] sm:gap-[3px]">
+                  {week.map((day, di) => (
+                    <div
+                      key={di}
+                      className="heatmap-cell rounded-[2px] w-[7px] h-[7px] sm:w-[11px] sm:h-[11px]"
+                      style={{
+                        backgroundColor: getColor(day.count),
+                      }}
+                      title={`${day.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}: ${day.count} submission${day.count !== 1 ? 's' : ''}`}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Legend */}

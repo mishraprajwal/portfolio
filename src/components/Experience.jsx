@@ -23,9 +23,12 @@ export default function Experience() {
     const cards = cardsRef.current;
     if (!cards || cards.length === 0) return;
 
-    // Set wrapper height: viewport + extra scroll room for the sticky effect
-    const scrollRoom = window.innerHeight * 1.8;
-    wrapper.style.height = `${window.innerHeight + scrollRoom}px`;
+    // Set wrapper height: viewport + extra scroll room for the sticky effect (desktop only)
+    const isMobile = window.innerWidth < 768;
+    if (!isMobile) {
+      const scrollRoom = window.innerHeight * 1.8;
+      wrapper.style.height = `${window.innerHeight + scrollRoom}px`;
+    }
 
     const ctx = gsap.context(() => {
       // Title reveal
@@ -46,61 +49,63 @@ export default function Experience() {
         });
       });
 
-      // Build timeline: focus card 1, hold, unfocus, focus card 2, hold, unfocus
-      const tl = gsap.timeline();
-      const inners = cards.map(c => c.querySelector('.timeline-card'));
+      if (!isMobile) {
+        // Build timeline: focus card 1, hold, unfocus, focus card 2, hold, unfocus
+        const tl = gsap.timeline();
+        const inners = cards.map(c => c.querySelector('.timeline-card'));
 
-      gsap.set(inners, { scale: 1, boxShadow: '0 10px 28px rgba(0,0,0,0.6)', borderColor: 'rgba(255,255,255,0.04)' });
+        gsap.set(inners, { scale: 1, boxShadow: '0 10px 28px rgba(0,0,0,0.6)', borderColor: 'rgba(255,255,255,0.04)' });
 
-      inners.forEach((inner) => {
-        tl.to(inner, {
-          scale: 1.03,
-          boxShadow: '0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(255,255,255,0.04)',
-          borderColor: 'rgba(255,255,255,0.12)',
-          duration: 0.4, ease: 'power2.out',
-        });
-        tl.to(inner, { duration: 0.5 }); // hold
-        tl.to(inner, {
-          scale: 1,
-          boxShadow: '0 10px 28px rgba(0,0,0,0.6)',
-          borderColor: 'rgba(255,255,255,0.04)',
-          duration: 0.3, ease: 'power2.in',
-        });
-      });
-
-      // Scrub through the timeline as the wrapper scrolls (sticky handles the "pinning")
-      ScrollTrigger.create({
-        trigger: wrapper,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 0.8,
-        animation: tl,
-      });
-
-      // Mouse hover: 3D tilt + scale + glow
-      cards.forEach((card) => {
-        const inner = card.querySelector('.timeline-card');
-        if (!inner) return;
-
-        const handleMove = (e) => {
-          const rect = inner.getBoundingClientRect();
-          const px = (e.clientX - rect.left) / rect.width;
-          const py = (e.clientY - rect.top) / rect.height;
-          gsap.to(inner, {
-            rotationX: (py - 0.5) * 8, rotationY: (px - 0.5) * -8,
-            scale: 1.04, boxShadow: '0 30px 60px rgba(0,0,0,0.5), 0 0 30px rgba(255,255,255,0.05)',
-            transformPerspective: 800, duration: 0.4, ease: 'power3.out',
+        inners.forEach((inner) => {
+          tl.to(inner, {
+            scale: 1.03,
+            boxShadow: '0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(255,255,255,0.04)',
+            borderColor: 'rgba(255,255,255,0.12)',
+            duration: 0.4, ease: 'power2.out',
           });
-        };
-        const handleLeave = () => {
-          gsap.to(inner, {
-            rotationX: 0, rotationY: 0, scale: 1,
-            boxShadow: '0 10px 28px rgba(0,0,0,0.6)', duration: 0.5, ease: 'power3.out',
+          tl.to(inner, { duration: 0.5 }); // hold
+          tl.to(inner, {
+            scale: 1,
+            boxShadow: '0 10px 28px rgba(0,0,0,0.6)',
+            borderColor: 'rgba(255,255,255,0.04)',
+            duration: 0.3, ease: 'power2.in',
           });
-        };
-        card.addEventListener('mousemove', handleMove);
-        card.addEventListener('mouseleave', handleLeave);
-      });
+        });
+
+        // Scrub through the timeline as the wrapper scrolls (sticky handles the "pinning")
+        ScrollTrigger.create({
+          trigger: wrapper,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.8,
+          animation: tl,
+        });
+
+        // Mouse hover: 3D tilt + scale + glow
+        cards.forEach((card) => {
+          const inner = card.querySelector('.timeline-card');
+          if (!inner) return;
+
+          const handleMove = (e) => {
+            const rect = inner.getBoundingClientRect();
+            const px = (e.clientX - rect.left) / rect.width;
+            const py = (e.clientY - rect.top) / rect.height;
+            gsap.to(inner, {
+              rotationX: (py - 0.5) * 8, rotationY: (px - 0.5) * -8,
+              scale: 1.04, boxShadow: '0 30px 60px rgba(0,0,0,0.5), 0 0 30px rgba(255,255,255,0.05)',
+              transformPerspective: 800, duration: 0.4, ease: 'power3.out',
+            });
+          };
+          const handleLeave = () => {
+            gsap.to(inner, {
+              rotationX: 0, rotationY: 0, scale: 1,
+              boxShadow: '0 10px 28px rgba(0,0,0,0.6)', duration: 0.5, ease: 'power3.out',
+            });
+          };
+          card.addEventListener('mousemove', handleMove);
+          card.addEventListener('mouseleave', handleLeave);
+        });
+      }
     }, wrapper);
 
     return () => {

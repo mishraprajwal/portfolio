@@ -9,17 +9,17 @@ gsap.registerPlugin(ScrollTrigger);
 const CoffeeCup = ({ className }) => (
   <svg className={className} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Steam lines */}
-    <path className="steam steam-1" d="M80 72 C80 58, 72 52, 80 38" stroke="white" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-    <path className="steam steam-2" d="M100 68 C100 54, 92 48, 100 34" stroke="white" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-    <path className="steam steam-3" d="M120 72 C120 58, 112 52, 120 38" stroke="white" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+    <path className="steam steam-1" d="M80 72 C80 58, 72 52, 80 38" stroke="#C4A882" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+    <path className="steam steam-2" d="M100 68 C100 54, 92 48, 100 34" stroke="#C4A882" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+    <path className="steam steam-3" d="M120 72 C120 58, 112 52, 120 38" stroke="#C4A882" strokeWidth="3.5" strokeLinecap="round" fill="none" />
     {/* Cup body */}
-    <path d="M52 88 L52 148 C52 162 66 174 100 174 C134 174 148 162 148 148 L148 88 Z" stroke="white" strokeWidth="4" fill="rgba(255,255,255,0.04)" />
+    <path d="M52 88 L52 148 C52 162 66 174 100 174 C134 174 148 162 148 148 L148 88 Z" stroke="#C4A882" strokeWidth="4" fill="rgba(196,168,130,0.06)" />
     {/* Cup rim */}
-    <ellipse cx="100" cy="88" rx="48" ry="8" stroke="white" strokeWidth="4" fill="rgba(255,255,255,0.06)" />
+    <ellipse cx="100" cy="88" rx="48" ry="8" stroke="#C4A882" strokeWidth="4" fill="rgba(196,168,130,0.08)" />
     {/* Handle */}
-    <path d="M148 100 C170 100, 174 120, 174 130 C174 140, 168 150, 148 148" stroke="white" strokeWidth="4" fill="none" strokeLinecap="round" />
+    <path d="M148 100 C170 100, 174 120, 174 130 C174 140, 168 150, 148 148" stroke="#C4A882" strokeWidth="4" fill="none" strokeLinecap="round" />
     {/* Coffee liquid line */}
-    <ellipse cx="100" cy="100" rx="40" ry="6" fill="rgba(255,255,255,0.08)" />
+    <ellipse cx="100" cy="100" rx="40" ry="6" fill="rgba(196,168,130,0.12)" />
   </svg>
 );
 
@@ -144,8 +144,8 @@ export default function CoffeeSection() {
 
           {/* Right: Witty text + counter + contact */}
           <div className="flex-1 text-center lg:text-left w-full">
-            <h3 className="coffee-reveal text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white">
-              Fueled by Caffeine
+            <h3 className="coffee-reveal text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
+              Fueled by <span style={{ color: '#C4A882' }}>Caffeine</span>
             </h3>
             <p className="coffee-reveal mt-2 md:mt-3 text-sm md:text-base text-white/70 leading-relaxed max-w-xl">
               Behind every clean commit and elegant solution is an unreasonable amount of coffee.
@@ -154,10 +154,10 @@ export default function CoffeeSection() {
 
             <div className="coffee-reveal mt-4 md:mt-6 flex flex-col sm:flex-row items-center lg:items-start gap-4">
               <div className="text-center">
-                <div ref={counterRef} className="text-3xl md:text-5xl font-extrabold text-white tracking-tighter tabular-nums">
+                <div ref={counterRef} className="text-3xl md:text-5xl font-extrabold tracking-tighter tabular-nums" style={{ color: '#C4A882' }}>
                   {cups.toLocaleString()}
                 </div>
-                <p className="text-xs text-white/50 mt-0.5">cups & counting</p>
+                <p className="text-xs mt-0.5 text-white/40">cups & counting</p>
               </div>
               <div className="hidden sm:block w-px h-12 bg-white/10" />
               <div className="text-center sm:text-left">

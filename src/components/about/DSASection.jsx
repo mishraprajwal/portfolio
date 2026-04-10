@@ -162,11 +162,11 @@ export default function DSASection() {
 
         {/* Header + Stats */}
         <div className="text-center mb-8 md:mb-10">
-          <p className="dsa-reveal text-xs md:text-sm font-medium tracking-widest uppercase text-green-400/60 mb-2">
+          <p className="dsa-reveal text-xs md:text-sm font-medium tracking-widest uppercase mb-2" style={{ color: 'rgba(59,130,246,0.7)' }}>
             Problem Solver
           </p>
-          <h3 className="dsa-reveal text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white">
-            Data Structures &amp; Algorithms
+          <h3 className="dsa-reveal text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
+            <span style={{ color: '#3B82F6' }}>Data Structures</span> & <span style={{ color: '#3B82F6' }}>Algorithms</span>
           </h3>
           <p className="dsa-reveal mt-2 md:mt-3 text-sm md:text-base text-white/50 leading-relaxed max-w-xl mx-auto">
             I don&apos;t just solve problems — I optimize them until the time complexity
@@ -176,7 +176,7 @@ export default function DSASection() {
 
           {/* Big number */}
           <div className="dsa-reveal mt-5">
-            <span className="text-5xl md:text-6xl font-extrabold text-white tracking-tighter tabular-nums">
+            <span className="text-5xl md:text-6xl font-extrabold tracking-tighter tabular-nums" style={{ color: '#3B82F6' }}>
               {stats.total}
             </span>
             <p className="text-xs text-white/40 mt-1">problems solved on LeetCode</p>

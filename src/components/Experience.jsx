@@ -5,8 +5,8 @@ import '../index.css';
 
 gsap.registerPlugin(ScrollTrigger);
 const baseData = [
-  { company: 'Saffron LLC', role: 'Full Stack Engineer', period: 'Feb 2026 - Present', location: 'Seattle, Washington, United States · Hybrid', summary: 'Building data-driven solutions for home connectivity.', stack: ['TypeScript', 'React Native', 'Swift', 'Kotlin', 'AWS', 'CI/CD', 'Redux', 'REST APIs'] },
-  { company: 'Tata Consultancy Services', role: 'Software Engineer', period: 'Apr 2021 - Apr 2023', location: 'Mumbai, Maharashtra, India · Hybrid', summary: 'Delivered scalable and low latency backend system services for Starbucks.', stack: ['Java', 'Spring Boot', 'CI/CD', 'MySQL', 'Linux', 'REST APIs'] },
+  { company: 'Saffron LLC', companyColor: '#F4A900', role: 'Full Stack Engineer', period: 'Feb 2026 - Present', location: 'Seattle, Washington, United States · Hybrid', summary: <>Building <span style={{ color: '#F4A900' }}>data-driven</span> solutions for home connectivity.</>, stack: ['TypeScript', 'React Native', 'Swift', 'Kotlin', 'AWS', 'CI/CD', 'Redux', 'REST APIs'] },
+  { company: 'Tata Consultancy Services', companyColor: '#3B82F6', role: 'Software Engineer', period: 'Apr 2021 - Apr 2023', location: 'Mumbai, Maharashtra, India · Hybrid', summary: <>Delivered scalable and low latency backend system services for <span style={{ color: '#00875A' }}>Starbucks</span>.</>, stack: ['Java', 'Spring Boot', 'CI/CD', 'MySQL', 'Linux', 'REST APIs'] },
 ];
 
 export default function Experience() {
@@ -123,11 +123,15 @@ export default function Experience() {
         <div className="space-y-6 w-full">
           {baseData.map((exp, idx) => (
             <article key={idx} ref={addCard} className="timeline-advanced-item">
-              <div className="timeline-card p-5 md:p-8 bg-white/[0.03] rounded-xl border border-white/[0.04] flex flex-col justify-between shadow-[0_10px_28px_rgba(0,0,0,0.6)]" style={{ transformStyle: 'preserve-3d', willChange: 'transform', transformOrigin: 'center center' }}>
+              <div className="timeline-card relative overflow-hidden p-5 md:p-8 bg-white/[0.03] rounded-2xl border border-white/[0.06] backdrop-blur-md flex flex-col justify-between shadow-[0_10px_28px_rgba(0,0,0,0.6)]" style={{ transformStyle: 'preserve-3d', willChange: 'transform', transformOrigin: 'center center' }}>
+                {/* Top accent gradient line */}
+                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                {/* Subtle corner glow */}
+                <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/[0.02] rounded-full blur-3xl pointer-events-none" />
                 <div>
                   <div className="card-header flex flex-col md:flex-row md:items-center md:justify-between mb-1 gap-1">
                     <div className="company-info">
-                      <h3 className="company-name text-lg md:text-xl font-bold">{exp.company}</h3>
+                      <h3 className="company-name text-lg md:text-xl font-bold" style={{ color: exp.companyColor }}>{exp.company}</h3>
                       <p className="role-title text-sm opacity-85 mt-1">{exp.role}</p>
                     </div>
                     <div className="md:text-right shrink-0 mt-2 md:mt-0">
@@ -140,7 +144,7 @@ export default function Experience() {
                 {exp.stack && (
                   <div className="mt-4 md:mt-6 flex flex-wrap gap-2">
                     {exp.stack.map((tech, i) => (
-                      <span key={i} className="px-2.5 py-0.5 md:px-3 md:py-1 text-xs font-medium rounded-full bg-white/[0.04] text-white/80 border border-white/[0.08]">
+                      <span key={i} className="px-2.5 py-0.5 md:px-3 md:py-1 text-xs font-medium rounded-full bg-white/[0.05] text-white/70 border border-white/[0.08] backdrop-blur-sm transition-colors duration-300 hover:text-white/90 hover:bg-white/[0.08]">
                         {tech}
                       </span>
                     ))}

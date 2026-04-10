@@ -13,36 +13,42 @@ const Projects = () => {
   const projects = [
     {
       name: 'Hierarchical Root Cause Analysis',
+      titleColor: '#F97316',
       github: 'https://github.com/mishraprajwal/rca',
       techStack: ['Python', 'Machine Learning', 'Data Analysis'],
       desc: 'Automated root cause analysis tool for system failures.',
     },
     {
       name: 'AI Code Review Assistant',
+      titleColor: '#8B5CF6',
       github: 'https://github.com/mishraprajwal/ai-code-review-assistant',
       techStack: ['Python', 'Java Spring Boot', 'Flask', 'React'],
       desc: 'AI-powered code review assistant for better code quality.',
     },
     {
       name: 'Lecture Summarizer',
+      titleColor: '#06B6D4',
       github: 'https://github.com/mishraprajwal/lecture-summarizer',
       techStack: ['Python', 'Flask', 'Open AI', 'NLP'],
       desc: 'Automatic lecture summarization using natural language processing.',
     },
     {
       name: 'Web3 CrowdFunding Platform',
+      titleColor: '#10B981',
       github: 'https://github.com/mishraprajwal/CrowdfundingPlatform',
       techStack: ['TypeScript', 'React', 'Web3'],
       desc: 'Decentralized crowdfunding with token-based incentives.',
     },
     {
       name: 'Heart Failure Prediction',
+      titleColor: '#EF4444',
       github: 'https://github.com/mishraprajwal/HeartFailurePrediction',
       techStack: ['Machine Learning', 'Python', 'Pandas'],
       desc: 'ML model to assist clinicians in early detection.',
     },
     {
       name: 'Sushi',
+      titleColor: '#FBBF24',
       github: 'https://github.com/mishraprajwal/sushi',
       techStack: ['JavaScript', 'HTML', 'CSS'],
       desc: 'A polished frontend demo with delightful micro-interactions.',
@@ -177,34 +183,28 @@ const Projects = () => {
                 role="button"
                 onClick={() => window.open(p.github, '_blank')}
               >
+                {/* Top accent gradient line */}
+                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent z-10" />
                 <div className="card-accent" aria-hidden></div>
                 <div className="card-sheen" aria-hidden></div>
                 <div className="card-hover-overlay" aria-hidden>
-                  <div className="overlay-inner">View details</div>
+                  <div className="overlay-inner flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    View on GitHub
+                  </div>
                 </div>
                 <div className="card-content">
-                  <h3 className="text-xl font-semibold mb-2">{p.name}</h3>
-                  <p className="text-sm text-gray-300 mb-4">{p.desc}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="text-[11px] font-medium text-white/30 uppercase tracking-widest mb-2 block">Project {String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="text-lg md:text-xl font-semibold mb-2 group-hover:text-white transition-colors duration-300" style={{ color: p.titleColor }}>{p.name}</h3>
+                  <p className="text-sm text-white/50 mb-4 leading-relaxed">{p.desc}</p>
+                  <div className="flex flex-wrap gap-2 mt-auto">
                     {p.techStack.map((t, id) => (
                       <span key={id} className="tech-badge">{t}</span>
                     ))}
                   </div>
-                  <div className="flex items-center gap-3 mt-auto">
-                    <span className="text-sm text-gray-400">&nbsp;</span>
-                  </div>
                 </div>
               </article>
             ))}
-          </div>
-
-          <div className="mt-16 text-center">
-            <h3 className="text-2xl font-semibold mb-6">Technologies & Tools</h3>
-            <div className="flex flex-wrap justify-center gap-3">
-              {['React','Node','TypeScript','Python','Docker','AWS','GraphQL','Web3'].map((t) => (
-                <span key={t} className="tech-pill">{t}</span>
-              ))}
-            </div>
           </div>
         </div>
       </div>

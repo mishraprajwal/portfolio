@@ -1,12 +1,18 @@
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { useRef, useEffect } from 'react';
-import HeroCanvas from './HeroCanvas'
+import { useRef, useEffect, useState } from 'react';
+
+const companies = [
+  { name: 'Saffron LLC', color: '#F4A900' },
+  { name: 'Tata Consultancy Services', color: '#3B82F6' },
+];
 
 const Hero = () => {
   const heroRef = useRef(null);
   const nameRef = useRef(null);
   const subtitleRef = useRef(null);
+  const companyRef = useRef(null);
+  const [companyIndex, setCompanyIndex] = useState(0);
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
@@ -18,21 +24,18 @@ const Hero = () => {
       { opacity: 1, duration: 1 }
     );
 
-    // Name animation: Letters fade in with scale and blur
-    const letters = nameRef.current.querySelectorAll('.letter');
+    // Name animation: smooth fade + blur reveal (Apple-style)
     tl.fromTo(
-      letters,
-      { opacity: 0, y: 100, scale: 0.9, filter: 'blur(5px)' },
+      nameRef.current,
+      { opacity: 0, y: 30, filter: 'blur(10px)' },
       {
         opacity: 1,
         y: 0,
-        scale: 1,
         filter: 'blur(0px)',
-        duration: 1.2,
-        stagger: 0.1,
-        ease: 'expo.out',
+        duration: 1.4,
+        ease: 'power3.out',
       },
-      '-=0.8'
+      '-=0.6'
     );
 
     // Subtitle animation (start shortly after name finishes)
@@ -56,51 +59,61 @@ const Hero = () => {
     });
   }, []);
 
+  // Cycle company name every 3 seconds with fade animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const el = companyRef.current;
+      if (!el) return;
+      gsap.to(el, {
+        opacity: 0, y: -8, duration: 0.3, ease: 'power2.in',
+        onComplete: () => {
+          setCompanyIndex(prev => (prev + 1) % companies.length);
+          gsap.fromTo(el, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
+        },
+      });
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section
       ref={heroRef}
-      className="w-full min-h-dvh bg-black text-white flex items-center justify-center relative overflow-hidden"
+      className="w-full min-h-dvh bg-black text-white flex items-center relative overflow-hidden"
     >
-      {/* 3D background canvas */}
-      <HeroCanvas />
-
       {/* soft vignette and gradient overlays */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70"></div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.0)_0%,rgba(0,0,0,0.85)_70%)]"></div>
       </div>
-      <div className="text-center z-10 px-4">
-        {/* Full name with space */}
+
+      <div className="z-10 px-6 sm:px-10 md:px-16 lg:px-24 w-full">
         <h1
           ref={nameRef}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight"
           style={{ fontFamily: 'SF Pro Display, sans-serif', fontWeight: 400 }}
         >
-          {/* Prajwal */}
-          <span className="letter inline-block">P</span>
-          <span className="letter inline-block">r</span>
-          <span className="letter inline-block">a</span>
-          <span className="letter inline-block">j</span>
-          <span className="letter inline-block">w</span>
-          <span className="letter inline-block">a</span>
-          <span className="letter inline-block">l</span>
-          <span className="letter inline-block">&nbsp;</span>
-          <span className="letter inline-block">M</span>
-          <span className="letter inline-block">i</span>
-          <span className="letter inline-block">s</span>
-          <span className="letter inline-block">h</span>
-          <span className="letter inline-block">r</span>
-          <span className="letter inline-block">a</span>
+          Prajwal Mishra
         </h1>
 
-        {/* Subtitle */}
-        <p
+        <div
           ref={subtitleRef}
-          className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl lg:text-2xl font-light text-gray-500 max-w-xl mx-auto px-2"
-          style={{ fontFamily: 'SF Pro Text, sans-serif', fontWeight: 300 }}
+          className="mt-4 sm:mt-6"
+          style={{ fontFamily: 'SF Pro Text, sans-serif' }}
         >
-          I'm a software developer based in Seattle.
-        </p>
+          <p className="text-sm sm:text-base md:text-lg font-light text-white">
+            Software Developer at{' '}
+            <span
+              ref={companyRef}
+              className="font-normal"
+              style={{ color: companies[companyIndex].color, transition: 'color 0.3s ease' }}
+            >
+              {companies[companyIndex].name}
+            </span>
+          </p>
+          <p className="text-xs sm:text-sm md:text-base font-light text-gray-500 mt-1.5">
+            Based in Seattle, WA
+          </p>
+        </div>
       </div>
 
       <div className="absolute inset-0 bg-black opacity-30 pointer-events-none"></div>

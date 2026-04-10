@@ -11,23 +11,23 @@ const Controller = ({ className }) => (
     {/* Controller body */}
     <path
       d="M40 55 C40 35, 70 20, 120 20 C170 20, 200 35, 200 55 L210 110 C215 130, 200 145, 180 140 L160 132 C150 128, 140 130, 130 130 L110 130 C100 130, 90 128, 80 132 L60 140 C40 145, 25 130, 30 110 Z"
-      stroke="white" strokeWidth="4" fill="rgba(255,255,255,0.03)"
+      stroke="#A855F7" strokeWidth="4" fill="rgba(168,85,247,0.04)"
       strokeLinejoin="round"
     />
     {/* D-pad */}
-    <rect x="62" y="58" width="10" height="30" rx="2" fill="white" />
-    <rect x="52" y="68" width="30" height="10" rx="2" fill="white" />
+    <rect x="62" y="58" width="10" height="30" rx="2" fill="#A855F7" />
+    <rect x="52" y="68" width="30" height="10" rx="2" fill="#A855F7" />
     {/* Action buttons */}
-    <circle cx="170" cy="60" r="5" fill="white" />
-    <circle cx="182" cy="72" r="5" fill="white" />
-    <circle cx="158" cy="72" r="5" fill="white" />
-    <circle cx="170" cy="84" r="5" fill="white" />
+    <circle cx="170" cy="60" r="5" fill="#A855F7" />
+    <circle cx="182" cy="72" r="5" fill="#A855F7" />
+    <circle cx="158" cy="72" r="5" fill="#A855F7" />
+    <circle cx="170" cy="84" r="5" fill="#A855F7" />
     {/* Center buttons */}
-    <rect x="105" y="65" width="12" height="6" rx="3" fill="rgba(255,255,255,0.3)" />
-    <rect x="123" y="65" width="12" height="6" rx="3" fill="rgba(255,255,255,0.3)" />
+    <rect x="105" y="65" width="12" height="6" rx="3" fill="rgba(168,85,247,0.4)" />
+    <rect x="123" y="65" width="12" height="6" rx="3" fill="rgba(168,85,247,0.4)" />
     {/* Analog sticks */}
-    <circle cx="90" cy="95" r="10" stroke="white" strokeWidth="2.5" fill="rgba(255,255,255,0.05)" />
-    <circle cx="150" cy="95" r="10" stroke="white" strokeWidth="2.5" fill="rgba(255,255,255,0.05)" />
+    <circle cx="90" cy="95" r="10" stroke="#A855F7" strokeWidth="2.5" fill="rgba(168,85,247,0.08)" />
+    <circle cx="150" cy="95" r="10" stroke="#A855F7" strokeWidth="2.5" fill="rgba(168,85,247,0.08)" />
   </svg>
 );
 
@@ -124,11 +124,11 @@ export default function FifaGamingSection() {
 
           {/* Right: Text + Stats */}
           <div className="flex-1 text-center lg:text-left">
-            <p className="fifa-reveal text-xs md:text-sm font-medium tracking-widest uppercase text-white/40 mb-2">
+            <p className="fifa-reveal text-xs md:text-sm font-medium tracking-widest uppercase mb-2" style={{ color: 'rgba(168,85,247,0.7)' }}>
               Off-duty mode
             </p>
-            <h3 className="fifa-reveal text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-white">
-              FIFA — Controller & Conqueror
+            <h3 className="fifa-reveal text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
+              <span style={{ color: '#A855F7' }}>FIFA</span> — Controller & Conqueror
             </h3>
             <p className="fifa-reveal mt-2 md:mt-3 text-sm md:text-base text-white/60 leading-relaxed max-w-lg">
               When I'm not shipping code, I'm shipping goals. 
@@ -138,7 +138,7 @@ export default function FifaGamingSection() {
 
             {/* Live counter */}
             <div className="fifa-reveal mt-5 md:mt-6">
-              <div ref={counterRef} className="text-4xl md:text-5xl font-extrabold text-white tracking-tighter tabular-nums inline-block">
+              <div ref={counterRef} className="text-4xl md:text-5xl font-extrabold tracking-tighter tabular-nums inline-block" style={{ color: '#A855F7' }}>
                 {goals.toLocaleString()}
               </div>
               <p className="text-xs text-white/40 mt-0.5">career goals — and counting</p>

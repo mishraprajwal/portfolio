@@ -10,6 +10,7 @@ const educationData = [
         level: "Master's Degree",
         field: "Computer and Information Science",
         institution: "New Jersey Institute of Technology",
+        institutionColor: "#D32F2F",
         year: "September 2023 - May 2025",
         
         coursework: [
@@ -25,6 +26,7 @@ const educationData = [
         level: "Bachelor's Degree",
         field: "Information Technology",
         institution: "University of Mumbai",
+        institutionColor: "#4338CA",
         year: "August 2016 - May 2020",
         
         coursework: [
@@ -127,7 +129,7 @@ const Education = () => {
                                     <div className="education-field">{edu.field}</div>
                                 </div>
                                 <div className="education-right">
-                                    <div className="education-institution">{edu.institution}</div>
+                                    <div className="education-institution" style={{ color: edu.institutionColor }}>{edu.institution}</div>
                                     <div className="education-year">{edu.year}</div>
                                     {/* CGPA removed per request */}
                                 </div>

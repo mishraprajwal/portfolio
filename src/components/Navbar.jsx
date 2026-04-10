@@ -11,9 +11,9 @@ const navLinks = {
 
 const Navbar = () => {
   return (
-    <header className="w-full py-5 sm:px-10 px-5 flex justify-between items-center">
-      <nav className="flex w-full screen-max-width">
-        <div className="flex flex-1 justify-center flex-wrap gap-1">
+    <header className="w-full py-4 sm:py-5 sm:px-10 px-4 flex justify-between items-center">
+      <nav className="flex w-full screen-max-width items-center">
+        <div className="flex flex-1 justify-center gap-3 sm:gap-5">
           {navLists.map((nav) => (
             <a
               key={nav}
@@ -42,14 +42,11 @@ const Navbar = () => {
               }}
               target={nav === "Home" || nav === "About" ? "_self" : "_blank"}
               rel={nav === "Home" || nav === "About" ? undefined : "noopener noreferrer"}
-              className="px-5 text-sm cursor-pointer text-gray hover:text-white transition-all"
+              className="text-xs sm:text-sm cursor-pointer text-gray hover:text-white transition-all whitespace-nowrap"
             >
               {nav}
             </a>
           ))}
-        </div>
-        <div className="flex items-baseline gap-7 max-sm:justify-end max-sm:flex-1">
-          <img src={searchImg} alt="search" width={18} height={18} />
         </div>
       </nav>
     </header>

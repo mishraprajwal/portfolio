@@ -371,8 +371,7 @@ location { color: rgba(255,255,255,0.65); }
 
 #projects {
   position: relative;
-  /* Subtle dark gradient background to complement the 3D hero */
-  background: linear-gradient(180deg, rgba(6,6,6,1) 0%, rgba(14,14,14,1) 100%);
+  background: #000;
 }
 
 /* modal removed */

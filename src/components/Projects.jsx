@@ -159,10 +159,10 @@ const Projects = () => {
   return (
     <section ref={wrapperRef} id="projects" className="w-full bg-black text-white relative">
       <div ref={stickyRef} className="md:sticky md:top-0 md:h-screen flex items-center overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-20 relative w-full">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20 relative w-full">
           <h2
             id="projects-title"
-            className="text-3xl md:text-5xl font-semibold text-center mb-8 md:mb-12"
+            className="text-2xl sm:text-3xl md:text-5xl font-semibold text-center mb-6 md:mb-12"
             style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
           >
             Selected Work

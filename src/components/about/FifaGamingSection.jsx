@@ -56,7 +56,7 @@ export default function FifaGamingSection() {
       // Controller entrance — slide from right with rotation
       gsap.fromTo(
         el.querySelector('.controller-visual'),
-        { x: 80, autoAlpha: 0, rotation: 12 },
+        { x: -80, autoAlpha: 0, rotation: -12 },
         { x: 0, autoAlpha: 1, rotation: 0, duration: 1.2, ease: 'power3.out',
           scrollTrigger: { trigger: el, start: 'top 85%' } }
       );
@@ -112,9 +112,17 @@ export default function FifaGamingSection() {
     <section ref={sectionRef} className="about-section relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-0 w-full">
 
-        <div className="flex flex-col-reverse lg:flex-row items-center gap-4 sm:gap-8 lg:gap-16">
+        <div className="flex flex-col lg:flex-row items-center gap-4 sm:gap-8 lg:gap-16">
 
-          {/* Left: Text + Stats */}
+          {/* Left: Floating controller */}
+          <div className="controller-visual flex-shrink-0 flex items-center justify-center relative">
+            <div className="controller-glow absolute w-48 h-48 md:w-64 md:h-64 rounded-full bg-white/[0.02] blur-3xl" />
+            <div className="controller-float relative">
+              <Controller className="w-40 h-28 md:w-56 md:h-40 lg:w-72 lg:h-52" />
+            </div>
+          </div>
+
+          {/* Right: Text + Stats */}
           <div className="flex-1 text-center lg:text-left">
             <p className="fifa-reveal text-xs md:text-sm font-medium tracking-widest uppercase text-white/40 mb-2">
               Off-duty mode
@@ -155,14 +163,6 @@ export default function FifaGamingSection() {
             <p className="fifa-reveal mt-4 text-white/30 text-xs italic max-w-md mx-auto lg:mx-0">
               "I don't rage quit — I call it an aggressive deployment rollback."
             </p>
-          </div>
-
-          {/* Right: Floating controller */}
-          <div className="controller-visual flex-shrink-0 flex items-center justify-center relative">
-            <div className="controller-glow absolute w-48 h-48 md:w-64 md:h-64 rounded-full bg-white/[0.02] blur-3xl" />
-            <div className="controller-float relative">
-              <Controller className="w-40 h-28 md:w-56 md:h-40 lg:w-72 lg:h-52" />
-            </div>
           </div>
         </div>
 

@@ -59,7 +59,7 @@ const Hero = () => {
   return (
     <section
       ref={heroRef}
-      className="w-full h-screen bg-black text-white flex items-center justify-center relative overflow-hidden"
+      className="w-full min-h-dvh bg-black text-white flex items-center justify-center relative overflow-hidden"
     >
       {/* 3D background canvas */}
       <HeroCanvas />
@@ -69,11 +69,11 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70"></div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.0)_0%,rgba(0,0,0,0.85)_70%)]"></div>
       </div>
-      <div className="text-center z-10">
+      <div className="text-center z-10 px-4">
         {/* Full name with space */}
         <h1
           ref={nameRef}
-          className="text-6xl md:text-5xl font-bold tracking-tight"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight"
           style={{ fontFamily: 'SF Pro Display, sans-serif', fontWeight: 400 }}
         >
           {/* Prajwal */}
@@ -96,7 +96,7 @@ const Hero = () => {
         {/* Subtitle */}
         <p
           ref={subtitleRef}
-          className="mt-6 text-xl md:text-2xl font-light text-gray-500 max-w-xl mx-auto"
+          className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl lg:text-2xl font-light text-gray-500 max-w-xl mx-auto px-2"
           style={{ fontFamily: 'SF Pro Text, sans-serif', fontWeight: 300 }}
         >
           I'm a software developer based in Seattle.

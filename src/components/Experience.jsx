@@ -111,9 +111,9 @@ export default function Experience() {
 
   return (
     <section ref={wrapperRef} id="experience" className="w-full bg-black text-white relative">
-      <div className="sticky top-0 min-h-screen flex flex-col justify-center items-center px-4 py-16 md:py-0 md:h-screen">
+      <div className="md:sticky md:top-0 md:min-h-screen flex flex-col justify-center items-center px-4 py-12 md:py-0 md:h-screen">
         <div className="w-full max-w-2xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-semibold text-center mb-8 md:mb-10">Career & Experience</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-semibold text-center mb-6 md:mb-10">Career & Experience</h2>
 
         <div className="space-y-6 w-full">
           {baseData.map((exp, idx) => (

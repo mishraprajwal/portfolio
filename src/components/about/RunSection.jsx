@@ -67,7 +67,7 @@ export default function RunSection() {
 
       gsap.fromTo(
         el.querySelector('.run-card-wrap'),
-        { x: -60, autoAlpha: 0, scale: 0.95 },
+        { x: 60, autoAlpha: 0, scale: 0.95 },
         { x: 0, autoAlpha: 1, scale: 1, duration: 1.2, ease: 'power3.out',
           scrollTrigger: { trigger: el, start: 'top 85%' } }
       );
@@ -87,14 +87,9 @@ export default function RunSection() {
     <section ref={sectionRef} className="about-section relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-0 w-full">
 
-        <div className="flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-16">
+        <div className="flex flex-col-reverse lg:flex-row items-center gap-6 sm:gap-8 lg:gap-16">
 
-          {/* Left: Animated Strava card */}
-          <div className="run-card-wrap flex-shrink-0 w-full max-w-[240px] sm:max-w-[280px] lg:max-w-[300px]">
-            <StravaCard className="w-full" />
-          </div>
-
-          {/* Right: Text + Stats */}
+          {/* Left: Text + Stats */}
           <div className="flex-1 text-center lg:text-left">
             <p className="run-reveal text-xs md:text-sm font-medium tracking-widest uppercase text-orange-400/60 mb-2">
               On the road
@@ -142,6 +137,11 @@ export default function RunSection() {
             <p className="run-reveal mt-5 text-white/25 text-xs italic max-w-md mx-auto lg:mx-0">
               "Clear mind, clean code — one mile at a time."
             </p>
+          </div>
+
+          {/* Right: Animated Strava card */}
+          <div className="run-card-wrap flex-shrink-0 w-full max-w-[240px] sm:max-w-[280px] lg:max-w-[300px]">
+            <StravaCard className="w-full" />
           </div>
         </div>
 

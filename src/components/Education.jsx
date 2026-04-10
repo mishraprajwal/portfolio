@@ -110,7 +110,7 @@ const Education = () => {
     return (
         <section ref={rootRef} className="education-section" id="education">
             <div className="education-bg" aria-hidden />
-            <div className="education-inner max-w-6xl mx-auto px-6 py-20">
+            <div className="education-inner max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
                 <h2 className="education-title">Education</h2>
                 <div className="education-list">
                     {educationData.map((edu, idx) => (

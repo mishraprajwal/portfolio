@@ -1,10 +1,157 @@
 /* About page: full-viewport sections and larger, hero-like cards */
 .about-section {
   min-height: 100vh; /* each section fills the viewport */
+  min-height: 100dvh; /* dynamic viewport height for mobile */
   display: flex;
   align-items: center; /* center vertically */
   color: #fff;
   background: transparent;
+}
+
+@media (max-width: 640px) {
+  .about-section {
+    min-height: auto;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+/* ── Coffee Section Animations ── */
+
+/* Infinite gentle float */
+.coffee-float {
+  animation: coffee-float 4s ease-in-out infinite;
+}
+
+@keyframes coffee-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+/* Steam rising animations — infinite, staggered */
+.steam {
+  opacity: 0.6;
+  animation: steam-rise 2.4s ease-in-out infinite;
+}
+.steam-1 { animation-delay: 0s; }
+.steam-2 { animation-delay: 0.4s; }
+.steam-3 { animation-delay: 0.8s; }
+
+@keyframes steam-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scaleY(0.8);
+  }
+  30% {
+    opacity: 0.7;
+  }
+  70% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-18px) scaleY(1.2);
+  }
+}
+
+/* Subtle glow behind the cup */
+.coffee-visual::before {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.coffee-visual {
+  position: relative;
+}
+
+/* ── FIFA Controller Animations ── */
+.controller-float {
+  animation: controller-float 5s ease-in-out infinite;
+}
+
+@keyframes controller-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(1.5deg); }
+  75% { transform: translateY(6px) rotate(-1deg); }
+}
+
+.controller-visual {
+  position: relative;
+}
+
+/* ── Run Section Animations ── */
+.run-pulse {
+  animation: run-pulse 2s ease-in-out infinite;
+}
+
+@keyframes run-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.6); }
+  50% { opacity: 0.6; box-shadow: 0 0 0 4px rgba(251, 146, 60, 0); }
+}
+
+.run-progress {
+  animation: run-progress-fill 2s ease-out forwards;
+}
+
+@keyframes run-progress-fill {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+/* ── Route path drawing animation ── */
+.route-path {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: route-draw 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(255, 87, 34, 0.4));
+}
+
+@keyframes route-draw {
+  0% { stroke-dashoffset: 800; }
+  50% { stroke-dashoffset: 0; }
+  60% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -800; }
+}
+
+.route-dot-start {
+  animation: route-dot-in 3s ease-in-out infinite;
+}
+
+.route-dot-end {
+  animation: route-dot-end-in 3s ease-in-out infinite;
+}
+
+@keyframes route-dot-in {
+  0%, 3% { opacity: 0; }
+  5% { opacity: 1; }
+  55% { opacity: 1; }
+  60% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes route-dot-end-in {
+  0%, 45% { opacity: 0; }
+  50% { opacity: 1; }
+  55% { opacity: 1; }
+  60% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.controller-glow {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
 }
 
 .section-inner {

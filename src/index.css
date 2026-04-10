@@ -358,7 +358,7 @@ location { color: rgba(255,255,255,0.65); }
 @media (max-width: 768px) {
   .timeline-vertical { left: 12px; transform: none; }
   .timeline-indicator { left: 12px; transform: translate(-50%, 0); }
-  .timeline-advanced-item, .timeline-advanced-item.left, .timeline-advanced-item.right { width: 100%; left: 0; text-align: left; padding-left: 2.25rem; }
+  .timeline-advanced-item, .timeline-advanced-item.left, .timeline-advanced-item.right { width: 100%; left: 0; text-align: left; padding-left: 0; }
   .timeline-advanced-item.left .timeline-dot, .timeline-advanced-item.right .timeline-dot { left: 6px; right: auto; }
 }
 

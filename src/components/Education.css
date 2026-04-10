@@ -52,10 +52,18 @@
 
 .education-row {
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: baseline;
-  margin-bottom: 0.4rem; /* smaller gap so content sits tighter */
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.4rem;
+}
+
+@media (min-width: 768px) {
+  .education-row {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+  }
 }
 
 .education-left {
@@ -75,10 +83,17 @@
 }
 
 .education-right {
-  text-align: right;
   display: flex;
   flex-direction: column;
-  align-items: flex-end; /* prevent children from stretching full width and keep them right-aligned */
+  text-align: left;
+  align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+  .education-right {
+    text-align: right;
+    align-items: flex-end;
+  }
 }
 
 .education-institution {

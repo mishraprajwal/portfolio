@@ -101,7 +101,15 @@
 .education-institution {
   font-weight: 600;
   font-size: 0.85rem;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+}
+
+@media (min-width: 768px) {
+  .education-institution {
+    white-space: nowrap;
+    word-break: normal;
+  }
 }
 
 .education-year {

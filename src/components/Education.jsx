@@ -122,7 +122,18 @@ const Education = () => {
                             className="education-card"
                             tabIndex={0}
                             aria-label={`${edu.level} in ${edu.field} from ${edu.institution} (${edu.year})`}
+                            style={{ position: 'relative', overflow: 'hidden' }}
                         >
+                            {/* Institution-colored top accent line */}
+                            <div
+                                className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none"
+                                style={{ background: `linear-gradient(to right, transparent, ${edu.institutionColor}60, transparent)` }}
+                            />
+                            {/* Institution-colored corner glow */}
+                            <div
+                                className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-3xl pointer-events-none"
+                                style={{ backgroundColor: `${edu.institutionColor}12` }}
+                            />
                             <div className="education-row">
                                 <div className="education-left">
                                     <div className="education-level">{edu.level}</div>

@@ -12,6 +12,7 @@ const baseData = [
 export default function Experience() {
   const wrapperRef = useRef(null);
   const cardsRef = useRef([]);
+  const timelineProgressRef = useRef(null);
 
   cardsRef.current = [];
   const addCard = (el) => { if (el && !cardsRef.current.includes(el)) cardsRef.current.push(el); };
@@ -81,6 +82,31 @@ export default function Experience() {
           animation: tl,
         });
 
+        // Timeline progress line fill on scroll
+        if (timelineProgressRef.current) {
+          gsap.to(timelineProgressRef.current, {
+            height: '100%',
+            ease: 'none',
+            scrollTrigger: {
+              trigger: wrapper,
+              start: 'top top',
+              end: 'bottom bottom',
+              scrub: 0.5,
+            },
+          });
+        }
+
+        // Animate timeline dots on entrance
+        const dots = wrapper.querySelectorAll('.timeline-dot');
+        dots.forEach((dot, i) => {
+          gsap.fromTo(dot,
+            { scale: 0, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.5, delay: i * 0.15, ease: 'back.out(2)',
+              scrollTrigger: { trigger: wrapper, start: 'top 75%', toggleActions: 'play none none none' },
+            }
+          );
+        });
+
         // Mouse hover: 3D tilt + scale + glow
         cards.forEach((card) => {
           const inner = card.querySelector('.timeline-card');
@@ -120,14 +146,28 @@ export default function Experience() {
         <div className="w-full max-w-2xl mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-5xl font-semibold text-center mb-6 md:mb-10">Career & Experience</h2>
 
-        <div className="space-y-6 w-full">
-          {baseData.map((exp, idx) => (
-            <article key={idx} ref={addCard} className="timeline-advanced-item">
-              <div className="timeline-card relative overflow-hidden p-5 md:p-8 bg-white/[0.03] rounded-2xl border border-white/[0.06] backdrop-blur-md flex flex-col justify-between shadow-[0_10px_28px_rgba(0,0,0,0.6)]" style={{ transformStyle: 'preserve-3d', willChange: 'transform', transformOrigin: 'center center' }}>
-                {/* Top accent gradient line */}
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                {/* Subtle corner glow */}
-                <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/[0.02] rounded-full blur-3xl pointer-events-none" />
+        {/* Timeline layout */}
+        <div className="relative w-full">
+          {/* Vertical timeline line (behind cards) */}
+          <div className="hidden md:block absolute left-6 top-0 bottom-0 w-px bg-white/[0.06]">
+            <div ref={timelineProgressRef} className="w-full bg-gradient-to-b from-white/40 via-white/20 to-transparent" style={{ height: '0%', transition: 'none' }} />
+          </div>
+
+          <div className="space-y-6 w-full md:pl-16">
+            {baseData.map((exp, idx) => (
+              <article key={idx} ref={addCard} className="timeline-advanced-item relative">
+                {/* Timeline dot */}
+                <div
+                  className="timeline-dot hidden md:flex absolute -left-16 top-8 w-3 h-3 rounded-full border-2 items-center justify-center z-10"
+                  style={{ borderColor: exp.companyColor, backgroundColor: 'black' }}
+                >
+                  <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: exp.companyColor, opacity: 0.6 }} />
+                </div>
+                <div className="timeline-card relative overflow-hidden p-5 md:p-8 bg-white/[0.03] rounded-2xl border border-white/[0.06] backdrop-blur-md flex flex-col justify-between shadow-[0_10px_28px_rgba(0,0,0,0.6)]" style={{ transformStyle: 'preserve-3d', willChange: 'transform', transformOrigin: 'center center' }}>
+                  {/* Top accent gradient line in company color */}
+                  <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: `linear-gradient(to right, transparent, ${exp.companyColor}40, transparent)` }} />
+                  {/* Subtle corner glow in company color */}
+                  <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full blur-3xl pointer-events-none" style={{ backgroundColor: `${exp.companyColor}08` }} />
                 <div>
                   <div className="card-header flex flex-col md:flex-row md:items-center md:justify-between mb-1 gap-1">
                     <div className="company-info">
@@ -153,6 +193,7 @@ export default function Experience() {
               </div>
             </article>
           ))}
+        </div>
         </div>
         </div>
       </div>

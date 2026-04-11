@@ -158,9 +158,23 @@ canvas {
   inset: -40% -20% auto auto;
   width: 220px;
   height: 220px;
-  background: radial-gradient(circle at 30% 30%, rgba(99,102,241,0.14), transparent 30%);
+  background: var(--card-accent-bg, radial-gradient(circle at 30% 30%, rgba(99,102,241,0.14), transparent 30%));
   filter: blur(30px);
   transform: translateZ(-50px) scale(1.2);
+}
+
+/* Cursor spotlight */
+.card-spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity 500ms ease;
+}
+.project-card:hover .card-spotlight {
+  opacity: 1;
 }
 
 /* Sheen (sliding light) */
@@ -262,7 +276,7 @@ canvas {
 /* Hover shadow + border intensify */
 .project-card:hover, .project-card:focus {
   box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(255,255,255,0.03);
-  border-color: rgba(255,255,255,0.14);
+  border-color: var(--project-border-hover, rgba(255,255,255,0.14));
 }
 
 /* Reduced motion support */

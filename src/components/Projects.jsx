@@ -9,6 +9,7 @@ const Projects = () => {
   const wrapperRef = useRef(null);
   const stickyRef = useRef(null);
   const gridRef = useRef(null);
+  const dotsRef = useRef(null);
 
   const projects = [
     {
@@ -97,35 +98,69 @@ const Projects = () => {
 
           // Horizontal scroll via sticky — no pin needed
           const visibleWidth = track.parentElement.clientWidth;
+          // Add right padding so the last card can actually scroll to center
+          const lastCard = cards[cards.length - 1];
+          const extraPad = Math.max(0, (visibleWidth - lastCard.offsetWidth) / 2);
+          track.style.paddingRight = `${extraPad}px`;
+
           const totalScroll = Math.max(0, track.scrollWidth - visibleWidth);
 
+          const updateActiveCard = (progress) => {
+            // Use progress directly to determine active card — exact and works for all cards including last
+            const newActive = Math.min(Math.round(progress * (cards.length - 1)), cards.length - 1);
+            const currentX = -progress * totalScroll;
+            const visibleCenter = visibleWidth / 2;
+            cards.forEach((card, i) => {
+              const cardCenter = card.offsetLeft + card.offsetWidth / 2 + currentX;
+              const dist = Math.abs(cardCenter - visibleCenter);
+              // Scale: closer to center = larger
+              const normalized = Math.min(dist / (visibleWidth * 0.6), 1);
+              const targetScale = 1 - normalized * 0.045;
+              gsap.to(card, { scale: targetScale, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+            });
+            // Update progress dots — white only, no project color
+            dotsRef.current?.querySelectorAll('.prog-dot').forEach((dot, i) => {
+              dot.style.opacity = i === newActive ? '1' : '0.25';
+              dot.style.transform = i === newActive ? 'scale(1.5)' : 'scale(1)';
+              dot.style.backgroundColor = 'rgba(255,255,255,0.9)';
+            });
+          };
+
           if (totalScroll > 0) {
-            // Set wrapper height to create scroll room
             const scrollRoom = totalScroll * 1.4;
             wrapper.style.height = `${window.innerHeight + scrollRoom}px`;
 
-            gsap.to(track, {
-              x: -totalScroll,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: wrapper,
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 1,
-              },
+            const trackAnim = gsap.to(track, { x: -totalScroll, ease: 'none' });
+
+            ScrollTrigger.create({
+              trigger: wrapper,
+              start: 'top top',
+              end: 'bottom bottom',
+              scrub: 1,
+              animation: trackAnim,
+              onUpdate: (self) => updateActiveCard(self.progress),
             });
+
+            // Set initial state
+            updateActiveCard(0);
           }
 
-          // Mouse tilt
-          cards.forEach((card) => {
+          // Mouse tilt + spotlight
+          cards.forEach((card, i) => {
+            const spotlight = card.querySelector('.card-spotlight');
+
             const handleMove = (e) => {
               const rect = card.getBoundingClientRect();
               const px = (e.clientX - rect.left) / rect.width;
               const py = (e.clientY - rect.top) / rect.height;
-              gsap.to(card, { rotationX: (py - 0.5) * 10, rotationY: (px - 0.5) * -10, scale: 1.02, transformPerspective: 800, duration: 0.5, ease: 'power3.out' });
+              gsap.to(card, { rotationX: (py - 0.5) * 10, rotationY: (px - 0.5) * -10, scale: 1.03, transformPerspective: 800, duration: 0.5, ease: 'power3.out', overwrite: 'auto' });
+              if (spotlight) {
+                spotlight.style.background = `radial-gradient(circle at ${px * 100}% ${py * 100}%, ${projects[i].titleColor}28 0%, transparent 65%)`;
+              }
             };
             const handleLeave = () => {
-              gsap.to(card, { rotationX: 0, rotationY: 0, scale: 1, duration: 0.6, ease: 'power3.out' });
+              gsap.to(card, { rotationX: 0, rotationY: 0, scale: 1, duration: 0.6, ease: 'power3.out', overwrite: 'auto' });
+              if (spotlight) spotlight.style.background = 'none';
             };
             card.addEventListener('mousemove', handleMove);
             card.addEventListener('mouseleave', handleLeave);
@@ -145,8 +180,9 @@ const Projects = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         cards.forEach((c) => { if (c.__cleanup) { c.__cleanup(); delete c.__cleanup; } });
-        // Reset wrapper height before re-measuring
+        // Reset wrapper height and track padding before re-measuring
         wrapper.style.height = '';
+        track.style.paddingRight = '';
         setup();
       }, 200);
     };
@@ -158,6 +194,7 @@ const Projects = () => {
       window.removeEventListener('resize', onResize);
       cards.forEach((c) => { if (c.__cleanup) { c.__cleanup(); delete c.__cleanup; } });
       wrapper.style.height = '';
+      track.style.paddingRight = '';
       if (ctx) ctx.revert();
     };
   }, []);
@@ -182,10 +219,16 @@ const Projects = () => {
                 tabIndex={0}
                 role="button"
                 onClick={() => window.open(p.github, '_blank')}
+                style={{
+                  '--project-color': p.titleColor,
+                  '--project-border-hover': `${p.titleColor}40`,
+                  '--card-accent-bg': `radial-gradient(circle at 30% 30%, ${p.titleColor}18, transparent 30%)`,
+                }}
               >
-                {/* Top accent gradient line */}
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent z-10" />
+                {/* Top accent line in project color */}
+                <div className="absolute top-0 left-0 right-0 h-[1px] z-10" style={{ background: `linear-gradient(to right, transparent, ${p.titleColor}50, transparent)` }} />
                 <div className="card-accent" aria-hidden></div>
+                <div className="card-spotlight" aria-hidden></div>
                 <div className="card-sheen" aria-hidden></div>
                 <div className="card-hover-overlay" aria-hidden>
                   <div className="overlay-inner flex items-center gap-2">
@@ -202,8 +245,30 @@ const Projects = () => {
                       <span key={id} className="tech-badge">{t}</span>
                     ))}
                   </div>
+                  {/* Mobile-only GitHub link — overlay is desktop only */}
+                  <a
+                    href={p.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="md:hidden mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-white/50 hover:text-white/80 transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    View on GitHub
+                  </a>
                 </div>
               </article>
+            ))}
+          </div>
+
+          {/* Scroll progress dots — desktop only */}
+          <div ref={dotsRef} className="hidden md:flex items-center justify-center gap-2.5 mt-8">
+            {projects.map((p, i) => (
+              <div
+                key={i}
+                className="prog-dot w-2 h-2 rounded-full transition-all duration-300"
+                style={{ backgroundColor: 'rgba(255,255,255,0.9)', opacity: i === 0 ? 1 : 0.25 }}
+              />
             ))}
           </div>
         </div>

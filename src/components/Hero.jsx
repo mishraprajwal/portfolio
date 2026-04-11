@@ -111,7 +111,7 @@ const Hero = () => {
             </span>
           </p>
           <p className="text-xs sm:text-sm md:text-base font-light text-gray-500 mt-1.5">
-            Based in Seattle, WA
+            Seattle, WA
           </p>
         </div>
       </div>

@@ -145,7 +145,12 @@ canvas {
   will-change: transform;
 }
 @media (min-width: 768px) {
-  .project-card { height: 18rem; }
+  .project-card { height: 22rem; }
+}
+
+.project-card:hover {
+  border-color: var(--project-border-hover, rgba(255,255,255,0.15));
+  box-shadow: 0 24px 64px rgba(0,0,0,0.7), 0 0 60px -20px var(--project-color, transparent);
 }
 
 .project-card:focus {
@@ -250,6 +255,35 @@ canvas {
 .tech-badge:hover {
   color: rgba(255,255,255,0.95);
   background: rgba(255,255,255,0.1);
+}
+
+.card-type-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.card-watermark {
+  position: absolute;
+  bottom: -1rem;
+  right: 1.25rem;
+  font-size: 8rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.025);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  letter-spacing: -0.05em;
+  transition: color 500ms ease;
+}
+.project-card:hover .card-watermark {
+  color: var(--project-watermark-color, rgba(255,255,255,0.04));
 }
 
 .visit-btn {

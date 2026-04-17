@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import '../index.css';
@@ -7,268 +7,331 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Projects = () => {
   const wrapperRef = useRef(null);
-  const stickyRef = useRef(null);
-  const gridRef = useRef(null);
-  const dotsRef = useRef(null);
+  const [activeIdx, setActiveIdx] = useState(0);
 
   const projects = [
     {
       name: 'Hierarchical Root Cause Analysis',
+      type: 'AI & Observability',
       titleColor: '#F97316',
       github: 'https://github.com/mishraprajwal/rca',
       techStack: ['Python', 'Machine Learning', 'Data Analysis'],
-      desc: 'Automated root cause analysis tool for system failures.',
+      desc: 'Automated root cause analysis that traces failures across distributed service layers. Pinpoints cascading issues faster than manual inspection.',
     },
     {
       name: 'AI Code Review Assistant',
+      type: 'DevTools & AI',
       titleColor: '#8B5CF6',
       github: 'https://github.com/mishraprajwal/ai-code-review-assistant',
       techStack: ['Python', 'Java Spring Boot', 'Flask', 'React'],
-      desc: 'AI-powered code review assistant for better code quality.',
+      desc: 'AI-powered code review integrated into developer workflows. Flags bugs, suggests refactors, and enforces standards before merge.',
     },
     {
       name: 'Lecture Summarizer',
+      type: 'NLP & Productivity',
       titleColor: '#06B6D4',
       github: 'https://github.com/mishraprajwal/lecture-summarizer',
       techStack: ['Python', 'Flask', 'Open AI', 'NLP'],
-      desc: 'Automatic lecture summarization using natural language processing.',
+      desc: 'Turns hours of lecture audio into structured summaries using NLP. Extracts key concepts, topics, and action items automatically.',
     },
     {
       name: 'Web3 CrowdFunding Platform',
+      type: 'Web3 & DeFi',
       titleColor: '#10B981',
       github: 'https://github.com/mishraprajwal/CrowdfundingPlatform',
       techStack: ['TypeScript', 'React', 'Web3'],
-      desc: 'Decentralized crowdfunding with token-based incentives.',
+      desc: 'Decentralized crowdfunding with transparent on-chain fund tracking. Smart contract–based milestone releases eliminate fraud risk.',
     },
     {
       name: 'Heart Failure Prediction',
+      type: 'Healthcare AI',
       titleColor: '#EF4444',
       github: 'https://github.com/mishraprajwal/HeartFailurePrediction',
       techStack: ['Machine Learning', 'Python', 'Pandas'],
-      desc: 'ML model to assist clinicians in early detection.',
+      desc: 'ML model trained on clinical data to flag at-risk patients early. Assists clinicians with probability scores and feature attribution.',
     },
     {
       name: 'Sushi',
+      type: 'Frontend',
       titleColor: '#FBBF24',
       github: 'https://github.com/mishraprajwal/sushi',
       techStack: ['JavaScript', 'HTML', 'CSS'],
-      desc: 'A polished frontend demo with delightful micro-interactions.',
+      desc: 'Polished frontend demo with smooth scroll and pixel-perfect responsive design. Built with vanilla JS and delightful micro-interactions.',
     },
   ];
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
-    const track = gridRef.current;
-    if (!wrapper || !track) return;
+    if (!wrapper) return;
 
-    const cards = Array.from(track.children);
-    if (!cards.length) return;
+    const isMobile = window.innerWidth < 768;
 
-    let ctx;
+    const ctx = gsap.context(() => {
+      // Title reveal
+      gsap.fromTo(
+        '#projects-title',
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: wrapper, start: 'top 85%', toggleActions: 'play none none none' },
+        }
+      );
 
-    const setup = () => {
-      if (ctx) ctx.revert();
-
-      const mobile = window.innerWidth < 768;
-
-      ctx = gsap.context(() => {
-        // Title reveal
-        gsap.fromTo(
-          '#projects-title',
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-            scrollTrigger: { trigger: wrapper, start: 'top 85%', toggleActions: 'play none none none' },
-          }
-        );
-
-        if (mobile) {
-          cards.forEach((card) => {
-            gsap.fromTo(card, { opacity: 0, y: 40 }, {
-              opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
-              scrollTrigger: { trigger: card, start: 'top 90%', toggleActions: 'play none none none' },
-            });
+      if (isMobile) {
+        // Mobile: simple stagger reveal of mini cards
+        const mobileCards = wrapper.querySelectorAll('.proj-mobile-card');
+        mobileCards.forEach((card, i) => {
+          gsap.fromTo(card, { opacity: 0, y: 32 }, {
+            opacity: 1, y: 0, duration: 0.6, delay: i * 0.08, ease: 'power3.out',
+            scrollTrigger: { trigger: card, start: 'top 92%', toggleActions: 'play none none none' },
           });
-        } else {
-          // Entrance stagger
-          gsap.fromTo(cards, { opacity: 0, y: 36, scale: 0.98 }, {
-            opacity: 1, y: 0, scale: 1, duration: 0.9, stagger: 0.08, ease: 'expo.out',
-            scrollTrigger: { trigger: wrapper, start: 'top 80%' },
-          });
+        });
+        return;
+      }
 
-          // Horizontal scroll via sticky — no pin needed
-          const visibleWidth = track.parentElement.clientWidth;
-          // Add right padding so the last card can actually scroll to center
-          const lastCard = cards[cards.length - 1];
-          const extraPad = Math.max(0, (visibleWidth - lastCard.offsetWidth) / 2);
-          track.style.paddingRight = `${extraPad}px`;
+      // ── MORPHING SINGLE CARD (Option D) ─────────────────────────────────
+      // One large card stays fixed center. For each project step:
+      //   1. Old content clips out upward
+      //   2. Background color and glow morph
+      //   3. New content clips in from below
+      // The card never moves — only its soul changes.
 
-          const totalScroll = Math.max(0, track.scrollWidth - visibleWidth);
+      const morphCard = wrapper.querySelector('.morph-card');
+      const progressBar = wrapper.querySelector('.morph-progress-bar');
+      let currentIdx = 0;
+      let isAnimating = false;
 
-          const updateActiveCard = (progress) => {
-            // Use progress directly to determine active card — exact and works for all cards including last
-            const newActive = Math.min(Math.round(progress * (cards.length - 1)), cards.length - 1);
-            const currentX = -progress * totalScroll;
-            const visibleCenter = visibleWidth / 2;
-            cards.forEach((card, i) => {
-              const cardCenter = card.offsetLeft + card.offsetWidth / 2 + currentX;
-              const dist = Math.abs(cardCenter - visibleCenter);
-              // Scale: closer to center = larger
-              const normalized = Math.min(dist / (visibleWidth * 0.6), 1);
-              const targetScale = 1 - normalized * 0.045;
-              gsap.to(card, { scale: targetScale, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
-            });
-            // Update progress dots — white only, no project color
-            dotsRef.current?.querySelectorAll('.prog-dot').forEach((dot, i) => {
-              dot.style.opacity = i === newActive ? '1' : '0.25';
-              dot.style.transform = i === newActive ? 'scale(1.5)' : 'scale(1)';
-              dot.style.backgroundColor = 'rgba(255,255,255,0.9)';
-            });
-          };
+      // Layers we'll animate
+      const bgGlow = morphCard.querySelector('.morph-glow');
+      const accentLine = morphCard.querySelector('.morph-accent');
+      const watermark = morphCard.querySelector('.morph-watermark');
+      const typeEl = morphCard.querySelector('.morph-type');
+      const titleEl = morphCard.querySelector('.morph-title');
+      const descEl = morphCard.querySelector('.morph-desc');
+      const tagsEl = morphCard.querySelector('.morph-tags');
+      const counterEl = morphCard.querySelector('.morph-counter');
 
-          if (totalScroll > 0) {
-            const scrollRoom = totalScroll * 1.4;
-            wrapper.style.height = `${window.innerHeight + scrollRoom}px`;
+      const setContent = (idx, animate) => {
+        const p = projects[idx];
+        if (!animate) {
+          typeEl.textContent = p.type;
+          typeEl.style.color = p.titleColor;
+          typeEl.style.borderColor = `${p.titleColor}35`;
+          typeEl.style.backgroundColor = `${p.titleColor}12`;
+          titleEl.textContent = p.name;
+          titleEl.style.color = p.titleColor;
+          descEl.textContent = p.desc;
+          watermark.textContent = String(idx + 1).padStart(2, '0');
+          watermark.style.color = `${p.titleColor}10`;
+          counterEl.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(projects.length).padStart(2, '0')}`;
+          tagsEl.innerHTML = p.techStack.map(t => `<span class="tech-badge">${t}</span>`).join('');
+          accentLine.style.background = `linear-gradient(to right, transparent, ${p.titleColor}60, transparent)`;
+          bgGlow.style.background = `radial-gradient(ellipse at 70% 20%, ${p.titleColor}18 0%, transparent 60%)`;
+          morphCard.style.boxShadow = `0 32px 80px rgba(0,0,0,0.75), 0 0 80px -30px ${p.titleColor}35`;
+          morphCard.style.borderColor = `${p.titleColor}30`;
+          return;
+        }
 
-            const trackAnim = gsap.to(track, { x: -totalScroll, ease: 'none' });
+        if (isAnimating) return;
+        isAnimating = true;
 
-            ScrollTrigger.create({
-              trigger: wrapper,
-              start: 'top top',
-              end: 'bottom bottom',
-              scrub: 1,
-              animation: trackAnim,
-              onUpdate: (self) => updateActiveCard(self.progress),
-            });
+        const contentEls = [typeEl, titleEl, descEl, tagsEl];
+        const tl = gsap.timeline({ onComplete: () => { isAnimating = false; } });
 
-            // Set initial state
-            updateActiveCard(0);
-          }
+        // Step 1: clip old content upward
+        tl.to(contentEls, {
+          y: -20, opacity: 0, duration: 0.28, ease: 'power2.in', stagger: 0.04,
+        });
 
-          // Mouse tilt + spotlight
-          cards.forEach((card, i) => {
-            const spotlight = card.querySelector('.card-spotlight');
+        // Step 2: swap content + morph colors (instant, mid-transition)
+        tl.call(() => {
+          typeEl.textContent = p.type;
+          typeEl.style.color = p.titleColor;
+          typeEl.style.borderColor = `${p.titleColor}35`;
+          typeEl.style.backgroundColor = `${p.titleColor}12`;
+          titleEl.textContent = p.name;
+          titleEl.style.color = p.titleColor;
+          descEl.textContent = p.desc;
+          watermark.textContent = String(idx + 1).padStart(2, '0');
+          counterEl.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(projects.length).padStart(2, '0')}`;
+          tagsEl.innerHTML = p.techStack.map(t => `<span class="tech-badge">${t}</span>`).join('');
+          gsap.set(contentEls, { y: 22 });
 
-            const handleMove = (e) => {
-              const rect = card.getBoundingClientRect();
-              const px = (e.clientX - rect.left) / rect.width;
-              const py = (e.clientY - rect.top) / rect.height;
-              gsap.to(card, { rotationX: (py - 0.5) * 10, rotationY: (px - 0.5) * -10, scale: 1.03, transformPerspective: 800, duration: 0.5, ease: 'power3.out', overwrite: 'auto' });
-              if (spotlight) {
-                spotlight.style.background = `radial-gradient(circle at ${px * 100}% ${py * 100}%, ${projects[i].titleColor}28 0%, transparent 65%)`;
-              }
-            };
-            const handleLeave = () => {
-              gsap.to(card, { rotationX: 0, rotationY: 0, scale: 1, duration: 0.6, ease: 'power3.out', overwrite: 'auto' });
-              if (spotlight) spotlight.style.background = 'none';
-            };
-            card.addEventListener('mousemove', handleMove);
-            card.addEventListener('mouseleave', handleLeave);
-            card.__cleanup = () => {
-              card.removeEventListener('mousemove', handleMove);
-              card.removeEventListener('mouseleave', handleLeave);
-            };
+          // Morph ambient colors
+          gsap.to(accentLine, { duration: 0.4, ease: 'none',
+            background: `linear-gradient(to right, transparent, ${p.titleColor}60, transparent)` });
+          gsap.to(bgGlow, { duration: 0.5, ease: 'power1.out',
+            background: `radial-gradient(ellipse at 70% 20%, ${p.titleColor}18 0%, transparent 60%)` });
+          gsap.to(morphCard, { duration: 0.5, ease: 'power2.out',
+            boxShadow: `0 32px 80px rgba(0,0,0,0.75), 0 0 80px -30px ${p.titleColor}35`,
+            borderColor: `${p.titleColor}30` });
+          gsap.to(watermark, { duration: 0.4, color: `${p.titleColor}10`, ease: 'none' });
+        });
+
+        // Step 3: reveal new content from below
+        tl.to(contentEls, {
+          y: 0, opacity: 1, duration: 0.32, ease: 'power3.out', stagger: 0.05,
+        });
+      };
+
+      // Initialize with first project
+      setContent(0, false);
+
+      // Update dots
+      const updateDots = (idx) => {
+        wrapper.querySelectorAll('.proj-dot').forEach((dot, i) => {
+          dot.style.opacity = i === idx ? '1' : '0.3';
+          dot.style.transform = i === idx ? 'scale(1.5)' : 'scale(1)';
+          dot.style.backgroundColor = projects[idx].titleColor;
+        });
+      };
+      updateDots(0);
+
+      // Build timeline: hold on each project
+      const tl = gsap.timeline();
+      projects.forEach((_, i) => {
+        tl.to({}, { duration: 1 }); // hold
+        if (i < projects.length - 1) {
+          tl.call(() => {
+            currentIdx = i + 1;
+            setActiveIdx(i + 1);
+            setContent(i + 1, true);
+            updateDots(i + 1);
+            // Update progress bar
+            if (progressBar) {
+              gsap.to(progressBar, { width: `${((i + 1) / (projects.length - 1)) * 100}%`, duration: 0.5, ease: 'power2.out' });
+            }
           });
         }
-      }, wrapper);
-    };
+      });
 
-    const raf = requestAnimationFrame(setup);
+      ScrollTrigger.create({
+        trigger: wrapper,
+        start: 'top top',
+        end: `+=${projects.length * 100}%`,
+        pin: true,
+        pinSpacing: true,
+        scrub: false,
+        animation: tl,
+        onUpdate: (self) => {
+          const idx = Math.min(
+            Math.floor(self.progress * projects.length),
+            projects.length - 1
+          );
+          if (idx !== currentIdx && !isAnimating) {
+            currentIdx = idx;
+            setActiveIdx(idx);
+            setContent(idx, true);
+            updateDots(idx);
+            if (progressBar) {
+              gsap.to(progressBar, { width: `${(idx / (projects.length - 1)) * 100}%`, duration: 0.3, ease: 'power2.out' });
+            }
+          }
+        },
+      });
 
-    let resizeTimer;
-    const onResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        cards.forEach((c) => { if (c.__cleanup) { c.__cleanup(); delete c.__cleanup; } });
-        // Reset wrapper height and track padding before re-measuring
-        wrapper.style.height = '';
-        track.style.paddingRight = '';
-        setup();
-      }, 200);
-    };
-    window.addEventListener('resize', onResize);
+    }, wrapper);
 
-    return () => {
-      cancelAnimationFrame(raf);
-      clearTimeout(resizeTimer);
-      window.removeEventListener('resize', onResize);
-      cards.forEach((c) => { if (c.__cleanup) { c.__cleanup(); delete c.__cleanup; } });
-      wrapper.style.height = '';
-      track.style.paddingRight = '';
-      if (ctx) ctx.revert();
-    };
+    return () => { ctx.revert(); };
   }, []);
+
+  const p = projects[activeIdx];
 
   return (
     <section ref={wrapperRef} id="projects" className="w-full bg-black text-white relative">
-      <div ref={stickyRef} className="md:sticky md:top-0 md:h-screen flex items-center overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20 relative w-full">
+      <div className="min-h-screen flex flex-col justify-center items-center px-4 py-12 md:py-0">
+        <div className="w-full max-w-7xl mx-auto">
           <h2
             id="projects-title"
-            className="text-2xl sm:text-3xl md:text-5xl font-semibold text-center mb-6 md:mb-12"
-            style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
+            className="text-2xl sm:text-3xl md:text-5xl font-semibold text-center mb-8 md:mb-12"
           >
             Selected Work
           </h2>
 
-          <div ref={gridRef} className="grid grid-cols-1 gap-5 md:flex md:flex-row md:gap-8 md:items-stretch">
-            {projects.map((p, i) => (
-              <article
-                key={i}
-                className="project-card group perspective-800 w-full md:flex-none md:w-[480px] lg:w-[560px]"
-                tabIndex={0}
-                role="button"
-                onClick={() => window.open(p.github, '_blank')}
-                style={{
-                  '--project-color': p.titleColor,
-                  '--project-border-hover': `${p.titleColor}40`,
-                  '--card-accent-bg': `radial-gradient(circle at 30% 30%, ${p.titleColor}18, transparent 30%)`,
-                }}
-              >
-                {/* Top accent line in project color */}
-                <div className="absolute top-0 left-0 right-0 h-[1px] z-10" style={{ background: `linear-gradient(to right, transparent, ${p.titleColor}50, transparent)` }} />
-                <div className="card-accent" aria-hidden></div>
-                <div className="card-spotlight" aria-hidden></div>
-                <div className="card-sheen" aria-hidden></div>
-                <div className="card-hover-overlay" aria-hidden>
-                  <div className="overlay-inner flex items-center gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                    View on GitHub
-                  </div>
+          {/* ── DESKTOP: morphing center card ── */}
+          <div className="hidden md:flex flex-col items-center gap-8">
+            <div
+              className="morph-card group relative overflow-hidden rounded-2xl border backdrop-blur-md w-full max-w-2xl cursor-pointer"
+              style={{
+                height: '380px',
+                background: 'rgba(255,255,255,0.04)',
+                borderColor: `${p.titleColor}30`,
+                boxShadow: `0 32px 80px rgba(0,0,0,0.75), 0 0 80px -30px ${p.titleColor}35`,
+                transition: 'border-color 500ms ease',
+              }}
+              onClick={() => window.open(p.github, '_blank')}
+              role="button"
+              tabIndex={0}
+            >
+              {/* Ambient glow layer */}
+              <div className="morph-glow absolute inset-0 pointer-events-none" />
+              {/* Top accent line */}
+              <div className="morph-accent absolute top-0 left-0 right-0 h-[1px]" />
+              {/* Watermark */}
+              <div className="morph-watermark absolute bottom-[-1rem] right-6 text-[9rem] font-black leading-none pointer-events-none select-none z-[1]" style={{ letterSpacing: '-0.05em' }} />
+
+              {/* Counter */}
+              <div className="morph-counter absolute top-5 right-6 text-[10px] font-bold tracking-[0.2em] uppercase opacity-20 z-10" />
+
+              {/* GitHub hint */}
+              <div className="absolute bottom-5 right-6 flex items-center gap-1.5 text-xs text-white/30 z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                View on GitHub
+              </div>
+
+              {/* Content */}
+              <div className="relative z-10 flex flex-col h-full p-8 md:p-10">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="morph-type card-type-badge" />
                 </div>
-                <div className="card-content">
-                  <span className="text-[11px] font-medium text-white/30 uppercase tracking-widest mb-2 block">Project {String(i + 1).padStart(2, '0')}</span>
-                  <h3 className="text-lg md:text-xl font-semibold mb-2 group-hover:text-white transition-colors duration-300" style={{ color: p.titleColor }}>{p.name}</h3>
-                  <p className="text-sm text-white/50 mb-4 leading-relaxed">{p.desc}</p>
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    {p.techStack.map((t, id) => (
-                      <span key={id} className="tech-badge">{t}</span>
-                    ))}
-                  </div>
-                  {/* Mobile-only GitHub link — overlay is desktop only */}
-                  <a
-                    href={p.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="md:hidden mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-white/50 hover:text-white/80 transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                    View on GitHub
-                  </a>
-                </div>
-              </article>
-            ))}
+                <h3 className="morph-title text-2xl md:text-3xl font-bold leading-snug mb-4" />
+                <p className="morph-desc text-sm md:text-base text-white/50 leading-relaxed flex-1" />
+                <div className="morph-tags flex flex-wrap gap-2 mt-5" />
+              </div>
+            </div>
+
+            {/* Progress bar + dots */}
+            <div className="flex flex-col items-center gap-3 w-full max-w-2xl">
+              <div className="w-full h-[2px] bg-white/10 rounded-full overflow-hidden">
+                <div className="morph-progress-bar h-full rounded-full" style={{ width: '0%', backgroundColor: p.titleColor, transition: 'background-color 400ms ease' }} />
+              </div>
+              <div className="flex items-center gap-3">
+                {projects.map((proj, i) => (
+                  <div
+                    key={i}
+                    className="proj-dot w-2 h-2 rounded-full transition-all duration-300"
+                    style={{ backgroundColor: proj.titleColor, opacity: i === 0 ? 1 : 0.3 }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <p className="text-xs text-white/25 tracking-widest uppercase">Scroll to explore</p>
           </div>
 
-          {/* Scroll progress dots — desktop only */}
-          <div ref={dotsRef} className="hidden md:flex items-center justify-center gap-2.5 mt-8">
-            {projects.map((p, i) => (
-              <div
+          {/* ── MOBILE: stacked list ── */}
+          <div className="flex flex-col gap-5 md:hidden">
+            {projects.map((proj, i) => (
+              <article
                 key={i}
-                className="prog-dot w-2 h-2 rounded-full transition-all duration-300"
-                style={{ backgroundColor: 'rgba(255,255,255,0.9)', opacity: i === 0 ? 1 : 0.25 }}
-              />
+                className="proj-mobile-card relative overflow-hidden rounded-2xl border p-5"
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  borderColor: `${proj.titleColor}25`,
+                }}
+                onClick={() => window.open(proj.github, '_blank')}
+              >
+                <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: `linear-gradient(to right, transparent, ${proj.titleColor}60, transparent)` }} />
+                <div className="flex items-center justify-between mb-2">
+                  <span className="card-type-badge" style={{ color: proj.titleColor, borderColor: `${proj.titleColor}35`, backgroundColor: `${proj.titleColor}12` }}>{proj.type}</span>
+                  <span className="text-[10px] text-white/25 font-bold tracking-widest">{String(i + 1).padStart(2, '0')}</span>
+                </div>
+                <h3 className="text-base font-bold mb-2" style={{ color: proj.titleColor }}>{proj.name}</h3>
+                <p className="text-xs text-white/45 leading-relaxed mb-3">{proj.desc}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {proj.techStack.map((t, id) => <span key={id} className="tech-badge">{t}</span>)}
+                </div>
+              </article>
             ))}
           </div>
         </div>

@@ -153,6 +153,30 @@
   border: 1px solid rgba(255,255,255,0.08);
 }
 
+/* Timeline fills and year labels (absolute overlays) */
+.education-section .year-label {
+  position: absolute;
+  left: -56px;
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+  color: rgba(255,255,255,0.45);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.education-section .year-label.year-bottom {
+  color: rgba(255,255,255,0.32);
+}
+
+.education-section .timeline-fill {
+  position: absolute;
+  left: 0;
+  width: 2px;
+  background: rgba(255,255,255,0.12);
+  z-index: 0;
+}
+
 @media (min-width: 768px) {
   .education-card {
     padding: 1.5rem;

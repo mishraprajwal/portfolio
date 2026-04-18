@@ -11,7 +11,7 @@ const educationData = [
         field: 'Computer and Information Sciences',
         institution: 'New Jersey Institute of Technology',
         institutionColor: '#D32F2F',
-        period: 'September 2023 - May 2025',
+        period: 'September 2023 – May 2025',
         startYear: 2023,
         endYear: 2025,
         coursework: [
@@ -28,7 +28,7 @@ const educationData = [
         field: 'Information Technology',
         institution: 'University of Mumbai',
         institutionColor: '#4338CA',
-        period: 'August 2016 - May 2020',
+        period: 'August 2016 – May 2020',
         startYear: 2016,
         endYear: 2020,
         coursework: [
@@ -44,183 +44,213 @@ const educationData = [
 
 export default function Education() {
     const rootRef = useRef(null);
-    const itemRefs = useRef([]);
-    itemRefs.current = [];
-    const addItem = (el) => { if (el && !itemRefs.current.includes(el)) itemRefs.current.push(el); };
-    const lineRef = useRef(null);
-    const fillRefs = useRef([]);
-    fillRefs.current = [];
-    const yearTopRefs = useRef([]);
-    yearTopRefs.current = [];
-    const yearBottomRefs = useRef([]);
-    yearBottomRefs.current = [];
+    const timelineRef = useRef(null);
+    const lineFillRef = useRef(null);
+    const cardRefs = useRef([]);
+    const dotRefs = useRef([]);
+    const yearStartRefs = useRef([]);
+    const yearEndRefs = useRef([]);
 
-    // We want the latest (highest endYear) on top — sort descending
     const ordered = [...educationData].sort((a, b) => b.endYear - a.endYear);
 
     useEffect(() => {
         const root = rootRef.current;
-        const items = itemRefs.current;
-        if (!root || !items) return;
+        const timeline = timelineRef.current;
+        if (!root || !timeline) return;
 
-        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const prefersReduced =
+            window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        if (prefersReduced) {
-            gsap.set(lineRef.current, { scaleY: 1 });
-            items.forEach((el) => gsap.set(el.querySelector('.edu-content'), { autoAlpha: 1, x: 0 }));
-            return;
-        }
-
-        // Prepare initial states
-        gsap.set(lineRef.current, { scaleY: 0, transformOrigin: 'bottom center' });
-        items.forEach((el) => {
-            const content = el.querySelector('.edu-content');
-            const bullet = el.querySelector('.edu-bullet');
-            const tags = el.querySelectorAll('.edu-tag');
-            gsap.set(content, { autoAlpha: 0, x: -36 });
-            gsap.set(bullet, { autoAlpha: 0, scale: 0.6 });
-            gsap.set(tags, { autoAlpha: 0, x: -12 });
-        });
-
-        // Build a scrubbed, pinned timeline that reveals each education entry in sequence
-        const n = items.length;
-        let tl = null;
-        let st = null;
-
-        const buildTimeline = () => {
-            // cleanup previous
-            try { if (st) { st.kill(); st = null; } } catch (e) {}
-            try { if (tl) { tl.kill(); tl = null; } } catch (e) {}
-
-            // wait a frame so layout stabilizes (important for accurate bounding rects)
-            requestAnimationFrame(() => {
-                // recompute positions relative to the line container
-                const lineContainer = lineRef.current && lineRef.current.parentElement;
-                let positions = [];
-                if (lineContainer) {
-                    const contRect = lineContainer.getBoundingClientRect();
-                    positions = items.map((el) => {
-                        const content = el.querySelector('.edu-content');
-                        const cr = content.getBoundingClientRect();
-                        const top = Math.round(cr.top - contRect.top);
-                        const bottom = Math.round(cr.bottom - contRect.top);
-                        return { top: Math.max(8, top), bottom: Math.max(top + 16, bottom) };
-                    });
-                }
-
-                const gapBuffer = 24; // space left above/below each segment
-
-                tl = gsap.timeline();
-                items.forEach((el, i) => {
-                    const pos = positions[i] || { top: Math.round(i * (lineRef.current.clientHeight / n)), bottom: Math.round((i + 1) * (lineRef.current.clientHeight / n)) };
-                    const fillTop = pos.top + Math.round(gapBuffer / 2);
-                    const fillHeight = Math.max(4, pos.bottom - pos.top - gapBuffer);
-
-                    const fillEl = fillRefs.current[i];
-                    if (fillEl) {
-                        fillEl.style.top = `${fillTop}px`;
-                        fillEl.style.height = '0px';
-                        tl.to(fillEl, { height: fillHeight, duration: 1, ease: 'none' });
-                    }
-
-                    // position year labels (top / bottom) relative to line container
-                    const yTop = yearTopRefs.current[i];
-                    const yBot = yearBottomRefs.current[i];
-                    if (yTop) {
-                        const h = yTop.getBoundingClientRect().height || 12;
-                        yTop.style.top = `${pos.top - Math.round(h / 2)}px`;
-                        yTop.style.opacity = '0';
-                    }
-                    if (yBot) {
-                        const h2 = yBot.getBoundingClientRect().height || 12;
-                        yBot.style.top = `${pos.bottom - Math.round(h2 / 2)}px`;
-                        yBot.style.opacity = '0';
-                    }
-
-                    tl.to(el.querySelector('.edu-bullet'), { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(1.2)' }, '<');
-                    tl.to(el.querySelector('.edu-content'), { autoAlpha: 1, x: 0, duration: 0.6, ease: 'power3.out' }, '<0.08');
-                    tl.to(el.querySelectorAll('.edu-tag'), { autoAlpha: 1, x: 0, duration: 0.45, stagger: 0.06, ease: 'power2.out' }, '<0.12');
-
-                    // reveal year labels in sync
-                    if (yTop) tl.to(yTop, { opacity: 1, duration: 0.35, ease: 'power2.out' }, '<');
-                    if (yBot) tl.to(yBot, { opacity: 1, duration: 0.35, ease: 'power2.out' }, '<');
-
-                    tl.to({}, { duration: 0.35 }); // small hold before next
+        const ctx = gsap.context(() => {
+            if (prefersReduced) {
+                gsap.set(lineFillRef.current, { height: '100%' });
+                cardRefs.current.forEach((card) => {
+                    gsap.set(card.querySelector('.edu-content'), { autoAlpha: 1, x: 0 });
+                    gsap.set(card.querySelectorAll('.edu-tag'), { autoAlpha: 1, y: 0 });
                 });
+                dotRefs.current.forEach((d) => gsap.set(d, { scale: 1, autoAlpha: 1 }));
+                yearStartRefs.current.forEach((y) => gsap.set(y, { autoAlpha: 1 }));
+                yearEndRefs.current.forEach((y) => gsap.set(y, { autoAlpha: 1 }));
+                return;
+            }
 
-                st = ScrollTrigger.create({
-                    trigger: root,
-                    start: 'top top',
-                    end: `+=${n * 100}%`,
-                    pin: true,
-                    scrub: 1,
-                    animation: tl,
-                });
+            // Initial hidden states
+            gsap.set(lineFillRef.current, { height: 0 });
+            cardRefs.current.forEach((card) => {
+                gsap.set(card.querySelector('.edu-content'), { autoAlpha: 0, x: 40 });
+                gsap.set(card.querySelectorAll('.edu-tag'), { autoAlpha: 0, y: 12 });
             });
-        };
+            dotRefs.current.forEach((d) => gsap.set(d, { scale: 0, autoAlpha: 0 }));
+            yearStartRefs.current.forEach((y) => gsap.set(y, { autoAlpha: 0, y: 8 }));
+            yearEndRefs.current.forEach((y) => gsap.set(y, { autoAlpha: 0, y: -8 }));
 
-        // initial build and rebuild on refresh to keep positions accurate on resize/pin changes
-        buildTimeline();
-        ScrollTrigger.addEventListener('refresh', buildTimeline);
-        const resizeHandler = () => ScrollTrigger.refresh();
-        window.addEventListener('resize', resizeHandler);
+            // Line grows top→down as user scrolls through the timeline
+            gsap.to(lineFillRef.current, {
+                height: '100%',
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: timeline,
+                    start: 'top 75%',
+                    end: 'bottom 50%',
+                    scrub: 0.6,
+                },
+            });
 
-        return () => {
-            try { ScrollTrigger.removeEventListener('refresh', buildTimeline); } catch (e) {}
-            try { window.removeEventListener('resize', resizeHandler); } catch (e) {}
-            try { if (st) st.kill(); } catch (e) {}
-            try { if (tl) tl.kill(); } catch (e) {}
-            try { ScrollTrigger.getAll().forEach(s => s.kill()); } catch (e) {}
-        };
+            // Each card reveals as the filling line reaches its dot
+            cardRefs.current.forEach((card, i) => {
+                const content = card.querySelector('.edu-content');
+                const tags = card.querySelectorAll('.edu-tag');
+                const dot = dotRefs.current[i];
+                const yearEnd = yearEndRefs.current[i];
+                const yearStart = yearStartRefs.current[i];
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        end: 'top 25%',
+                        scrub: 0.8,
+                    },
+                });
+
+                tl.to(yearEnd, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0)
+                    .to(dot, { scale: 1, autoAlpha: 1, duration: 0.4, ease: 'back.out(1.6)' }, 0.05)
+                    .to(content, { autoAlpha: 1, x: 0, duration: 0.7, ease: 'power3.out' }, 0.1)
+                    .to(
+                        tags,
+                        { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out' },
+                        0.25
+                    )
+                    .to(yearStart, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.6);
+            });
+        }, root);
+
+        return () => ctx.revert();
     }, []);
 
     return (
-        <section id="education" ref={rootRef} className="w-full bg-black text-white py-20 overflow-hidden">
-            <div className="max-w-5xl mx-auto px-6 lg:px-0 flex flex-col lg:flex-row gap-8">
-                <header className="w-full lg:w-48 mb-6 lg:mb-0">
-                    <h2 className="text-sm uppercase text-white/40 tracking-widest">Education</h2>
-                    <p className="mt-3 text-xs text-white/50">Timeline — newest first</p>
-                </header>
+        <section
+            id="education"
+            ref={rootRef}
+            className="w-full bg-black text-white pt-20 md:pt-28 pb-32 md:pb-48 overflow-hidden"
+        >
+            <div className="max-w-5xl mx-auto px-4 md:px-6">
+                <h2
+                    className="text-2xl sm:text-3xl md:text-5xl font-semibold text-center mb-3 md:mb-4 text-white"
+                    style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
+                >
+                    Education
+                </h2>
+                <p className="text-center text-white/40 text-sm md:text-base mb-16 md:mb-24 max-w-lg mx-auto">
+                    A timeline of where I studied — newest first
+                </p>
 
-                <div className="flex-1 relative">
-                    <div className="absolute left-6 lg:left-12 top-0 bottom-0 w-0 flex items-center" aria-hidden>
-                        <div className="relative h-full w-0 flex items-center">
-                            <div ref={lineRef} className="w-[2px] bg-white/6 origin-bottom" style={{ height: '100%', transformOrigin: 'bottom center' }} />
-                            {ordered.map((edu, i) => (
-                                <React.Fragment key={`seg-${i}`}>
-                                    <div ref={el => { fillRefs.current[i] = el; }} className="absolute left-0 top-0 w-[2px] bg-white/20 timeline-fill" style={{ height: 0 }} />
-                                    <div ref={el => { yearTopRefs.current[i] = el; }} className="year-label year-top absolute -left-12 text-xs text-white/40" style={{ top: 0 }}>{edu.endYear}</div>
-                                    <div ref={el => { yearBottomRefs.current[i] = el; }} className="year-label year-bottom absolute -left-12 text-xs text-white/30" style={{ top: 0 }}>{edu.startYear}</div>
-                                </React.Fragment>
-                            ))}
-                        </div>
-                    </div>
+                <div ref={timelineRef} className="relative max-w-3xl mx-auto pb-12 md:pb-16">
+                    {/* Vertical line backdrop */}
+                    <div
+                        className="absolute top-0 bottom-0 w-[2px] bg-white/8"
+                        style={{ left: '3.25rem' }}
+                        aria-hidden
+                    />
+                    {/* Progressive fill */}
+                    <div
+                        ref={lineFillRef}
+                        className="absolute top-0 w-[2px]"
+                        style={{
+                            left: '3.25rem',
+                            height: 0,
+                            background:
+                                'linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0.4) 70%, rgba(255,255,255,0.15))',
+                            boxShadow: '0 0 12px rgba(255,255,255,0.25)',
+                        }}
+                        aria-hidden
+                    />
 
-                    <div className="space-y-16 pl-16 md:pl-20">
-                        {ordered.map((edu, idx) => (
-                            <article key={idx} ref={addItem} className="relative flex items-start gap-6 lg:gap-10">
-                                <div className="w-24 flex flex-col items-center shrink-0">
-                                    <div className="edu-year text-xs text-white/40">{edu.endYear}</div>
-                                    <div className="mt-4 edu-bullet w-4 h-4 rounded-full bg-white/10 border border-white/20 flex items-center justify-center" style={{ opacity: 0 }}>
-                                        <div className="w-2 h-2 rounded-full" style={{ background: edu.institutionColor }} />
+                    <div className="flex flex-col gap-28 md:gap-40">
+                        {ordered.map((edu, i) => (
+                            <article
+                                key={i}
+                                ref={(el) => {
+                                    cardRefs.current[i] = el;
+                                }}
+                                className="relative"
+                            >
+                                {/* End year label (top of card, near line) */}
+                                <div
+                                    ref={(el) => {
+                                        yearEndRefs.current[i] = el;
+                                    }}
+                                    className="edu-year-label absolute text-[11px] md:text-xs font-mono tracking-widest text-white/55"
+                                    style={{ left: 0, top: '-1.25rem', width: '2.5rem' }}
+                                >
+                                    {edu.endYear}
+                                </div>
+
+                                {/* Dot on the line */}
+                                <div
+                                    ref={(el) => {
+                                        dotRefs.current[i] = el;
+                                    }}
+                                    className="edu-dot absolute flex items-center justify-center rounded-full bg-black"
+                                    style={{
+                                        left: 'calc(3.25rem - 9px)',
+                                        top: '0.5rem',
+                                        width: '18px',
+                                        height: '18px',
+                                        border: `2px solid ${edu.institutionColor}`,
+                                        boxShadow: `0 0 16px ${edu.institutionColor}66`,
+                                    }}
+                                    aria-hidden
+                                >
+                                    <div
+                                        className="rounded-full"
+                                        style={{ width: '6px', height: '6px', background: edu.institutionColor }}
+                                    />
+                                </div>
+
+                                {/* Card content */}
+                                <div
+                                    className="edu-content"
+                                    style={{ paddingLeft: '5.5rem' }}
+                                >
+                                    <div className="flex items-baseline gap-x-3 gap-y-1 mb-2 flex-wrap">
+                                        <span
+                                            className="text-base md:text-lg font-semibold"
+                                            style={{ color: edu.institutionColor }}
+                                        >
+                                            {edu.institution}
+                                        </span>
+                                        <span className="text-xs md:text-sm text-white/40">
+                                            {edu.period}
+                                        </span>
+                                    </div>
+                                    <h3 className="text-xl md:text-2xl font-bold leading-tight">
+                                        {edu.level}
+                                    </h3>
+                                    <p className="text-sm md:text-base text-white/60 mt-1 mb-5">
+                                        {edu.field}
+                                    </p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {edu.coursework.map((c, ci) => (
+                                            <span
+                                                key={ci}
+                                                className="edu-tag text-xs md:text-sm text-white/70 px-3 py-1 rounded-full border border-white/10 bg-white/[0.04]"
+                                            >
+                                                {c}
+                                            </span>
+                                        ))}
                                     </div>
                                 </div>
 
-                                <div className="edu-content max-w-3xl" style={{ opacity: 0 }}>
-                                    <div className="flex items-center gap-3 mb-1">
-                                        <span className="text-sm font-semibold" style={{ color: edu.institutionColor }}>{edu.institution}</span>
-                                        <span className="text-xs text-white/40">• {edu.period}</span>
-                                    </div>
-                                    <div className="mb-2">
-                                        <div className="text-base font-bold">{edu.level}</div>
-                                        <div className="text-sm text-white/60">{edu.field}</div>
-                                    </div>
-
-                                    <div className="flex flex-wrap gap-2 mt-3" aria-hidden>
-                                        {edu.coursework.map((c, i) => (
-                                            <span key={i} className="edu-tag text-xs text-white/40 px-3 py-1 rounded-full border border-white/6">{c}</span>
-                                        ))}
-                                    </div>
+                                {/* Start year label (bottom of card) */}
+                                <div
+                                    ref={(el) => {
+                                        yearStartRefs.current[i] = el;
+                                    }}
+                                    className="edu-year-label absolute text-[11px] md:text-xs font-mono tracking-widest text-white/55"
+                                    style={{ left: 0, bottom: '-1.75rem', width: '2.5rem' }}
+                                >
+                                    {edu.startYear}
                                 </div>
                             </article>
                         ))}

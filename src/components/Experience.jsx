@@ -348,7 +348,13 @@ export default function Experience() {
       </div>
 
       {/* ── MOBILE: grouped feature cards ── */}
-      <div className="flex flex-col md:hidden px-4 py-14 gap-10">
+      <div className="flex flex-col md:hidden px-4 pt-14 pb-14 gap-10">
+        <h2
+          className="text-2xl sm:text-3xl font-semibold text-center text-white mb-2"
+          style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
+        >
+          Career & Experience
+        </h2>
         {[...new Set(FEATURES.map(f => f.company))].map((co) => {
           const coFeatures = FEATURES.filter(f => f.company === co);
           const coColor = coFeatures[0].companyColor;

@@ -7,64 +7,64 @@ gsap.registerPlugin(ScrollTrigger);
 
 const FEATURES = [
   {
-    company: 'Saffron LLC', companyColor: '#F4A900',
+    company: 'Saffron', companyColor: '#F4A900',
     role: 'Full Stack Engineer · Feb 2026 – Present',
     location: 'Seattle, WA · Onsite',
     category: 'Mobile Engineering',
-    title: 'Cross-Platform Native',
-    description: 'Shipped a unified React Native application for iOS and Android — one codebase, two platforms, zero compromise on native feel.',
-    detail: 'React Native · TypeScript · Redux',
+    title: 'FWA Signal Mapping App',
+    description: 'Shipped a cross-platform iOS and Android app with visual signal mapping — helping 200K+ users identify optimal Fixed Wireless Access placement in real time.',
+    detail: 'React Native · TypeScript · iOS · Android',
     icon: 'mobile',
   },
   {
-    company: 'Saffron LLC', companyColor: '#F4A900',
+    company: 'Saffron', companyColor: '#F4A900',
+    role: 'Full Stack Engineer · Feb 2026 – Present',
+    location: 'Seattle, WA · Onsite',
+    category: 'Machine Learning',
+    title: 'MLOps on SageMaker',
+    description: 'Engineered an end-to-end MLOps pipeline on AWS SageMaker — ingesting production data, automating model training and evaluation, and deploying the best-performing model via CI/CD.',
+    detail: 'AWS SageMaker · GitHub Actions · CI/CD · Python',
+    icon: 'mlops',
+  },
+  {
+    company: 'Saffron', companyColor: '#F4A900',
     role: 'Full Stack Engineer · Feb 2026 – Present',
     location: 'Seattle, WA · Onsite',
     category: 'Cloud Infrastructure',
-    title: 'Scaled on AWS',
-    description: 'Architected serverless pipelines that auto-scale to real-time demand, keeping infrastructure cost directly proportional to usage.',
-    detail: 'AWS Lambda · DynamoDB · EventBridge · S3 · API Gateway',
+    title: 'Infrastructure as Code',
+    description: 'Built reusable CDK constructs and deployment pipelines to provision and manage AWS infrastructure — enabling idempotent, version-controlled deployments across dev, staging, and production.',
+    detail: 'AWS CDK · CloudFormation · IaC · Multi-Env',
     icon: 'cloud',
   },
   {
-    company: 'Saffron LLC', companyColor: '#F4A900',
+    company: 'Saffron', companyColor: '#F4A900',
+    role: 'Full Stack Engineer · Feb 2026 – Present',
+    location: 'Seattle, WA · Onsite',
+    category: 'Analytics & BI',
+    title: 'Embedded Analytics Dashboard',
+    description: 'Developed and deployed a Power BI embedded analytics and support ticket dashboard in React.js — delivering live KPIs and ticket insights behind Cognito-based RBAC authentication.',
+    detail: 'React.js · Power BI · AWS Cognito · RBAC',
+    icon: 'dashboard',
+  },
+  {
+    company: 'Saffron', companyColor: '#F4A900',
     role: 'Full Stack Engineer · Feb 2026 – Present',
     location: 'Seattle, WA · Onsite',
     category: 'API Design',
-    title: 'Type-Safe REST APIs',
-    description: 'Designed typed APIs consumed across mobile and web clients — enabling rapid iteration without breaking contracts downstream.',
-    detail: 'TypeScript · REST · AWS',
+    title: 'Serverless Microservices APIs',
+    description: 'Designed and integrated REST APIs using API Gateway, Lambda, and DynamoDB — enabling seamless data communication between internal microservices.',
+    detail: 'AWS API Gateway · Lambda · DynamoDB · REST',
     icon: 'api',
-  },
-  {
-    company: 'Saffron LLC', companyColor: '#F4A900',
-    role: 'Full Stack Engineer · Feb 2026 – Present',
-    location: 'Seattle, WA · Onsite',
-    category: 'Observability',
-    title: 'Real-Time Alerting',
-    description: 'Wired analytics and critical error traces into a live observability stack — catching regressions before users ever notice.',
-    detail: 'MixPanel · Sentry · Alerting',
-    icon: 'observe',
-  },
-  {
-    company: 'Saffron LLC', companyColor: '#F4A900',
-    role: 'Full Stack Engineer · Feb 2026 – Present',
-    location: 'Seattle, WA · Onsite',
-    category: 'Spatial Computing',
-    title: 'AR Navigation',
-    description: 'Engineered an augmented reality layer that superimposes live connectivity data onto physical spaces through the device camera.',
-    detail: 'ARKit · Swift · ARCore · Kotlin',
-    icon: 'ar',
   },
   {
     company: 'Tata Consultancy Services', companyColor: '#3B82F6',
     role: 'Software Engineer · Apr 2021 – Apr 2023',
     location: 'Mumbai, Maharashtra · Onsite',
     category: 'Engineering Visibility',
-    title: 'Support Dashboard',
-    description: 'Built a unified dashboard surfacing Starbucks backend health in real time — cutting mean time to resolution for production incidents.',
-    detail: 'React · DynamoDB · REST APIs',
-    icon: 'dashboard',
+    title: 'Serverless Alerting Pipeline',
+    description: 'Owned end-to-end design and delivery of a serverless reporting and critical-error alerting pipeline for Starbucks — saving 1 man-hour of manual work daily.',
+    detail: 'AWS Lambda · EventBridge · SES · Serverless',
+    icon: 'observe',
   },
   {
     company: 'Tata Consultancy Services', companyColor: '#3B82F6',
@@ -72,8 +72,8 @@ const FEATURES = [
     location: 'Mumbai, Maharashtra · Onsite',
     category: 'Quality Engineering',
     title: 'Zero-Touch Regression',
-    description: 'Automated the full regression testing pipeline — eliminating manual QA cycles and enabling confident deploys at every sprint boundary.',
-    detail: 'CI/CD · Java · Automation · Github Actions',
+    description: 'Cut regression testing from 8 hours to 2 hours by architecting a CI/CD pipeline for mobile test automation across iOS and Android — integrated with AWS Device Farm.',
+    detail: 'GitHub Actions · AWS Device Farm · iOS · Android',
     icon: 'pipeline',
   },
 ];
@@ -125,17 +125,26 @@ function ObserveIcon({ color }) {
     </svg>
   );
 }
-function ArIcon({ color }) {
+function MlopsIcon({ color }) {
   return (
     <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-      <path d="M40 10L66 25v30L40 70 14 55V25L40 10z" stroke={color} strokeWidth="1.8" strokeLinejoin="round"/>
-      <line x1="40" y1="10" x2="40" y2="70" stroke={color} strokeWidth="1.2" strokeLinecap="round" opacity="0.35"/>
-      <path d="M14 25l26 15 26-15" stroke={color} strokeWidth="1.2" strokeLinejoin="round" opacity="0.35"/>
-      <circle cx="40" cy="40" r="6" stroke={color} strokeWidth="1.7"/>
-      <line x1="40" y1="34" x2="40" y2="28" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="40" y1="46" x2="40" y2="52" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="34" y1="40" x2="28" y2="40" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="46" y1="40" x2="52" y2="40" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
+      <circle cx="14" cy="28" r="5" stroke={color} strokeWidth="1.8"/>
+      <circle cx="14" cy="52" r="5" stroke={color} strokeWidth="1.8"/>
+      <circle cx="40" cy="18" r="5" stroke={color} strokeWidth="1.8"/>
+      <circle cx="40" cy="40" r="5.5" stroke={color} strokeWidth="2" fill={color} fillOpacity="0.12"/>
+      <circle cx="40" cy="62" r="5" stroke={color} strokeWidth="1.8"/>
+      <circle cx="66" cy="34" r="5" stroke={color} strokeWidth="1.8"/>
+      <circle cx="66" cy="46" r="5" stroke={color} strokeWidth="1.8"/>
+      <line x1="19" y1="27" x2="35" y2="20" stroke={color} strokeWidth="1.3" strokeLinecap="round" opacity="0.5"/>
+      <line x1="19" y1="29" x2="35" y2="39" stroke={color} strokeWidth="1.3" strokeLinecap="round" opacity="0.5"/>
+      <line x1="19" y1="31" x2="35" y2="61" stroke={color} strokeWidth="1.3" strokeLinecap="round" opacity="0.3"/>
+      <line x1="19" y1="51" x2="35" y2="19" stroke={color} strokeWidth="1.3" strokeLinecap="round" opacity="0.3"/>
+      <line x1="19" y1="51" x2="35" y2="41" stroke={color} strokeWidth="1.3" strokeLinecap="round" opacity="0.5"/>
+      <line x1="19" y1="53" x2="35" y2="62" stroke={color} strokeWidth="1.3" strokeLinecap="round" opacity="0.5"/>
+      <line x1="45" y1="19" x2="61" y2="33" stroke={color} strokeWidth="1.3" strokeLinecap="round" opacity="0.5"/>
+      <line x1="45" y1="40" x2="61" y2="35" stroke={color} strokeWidth="1.3" strokeLinecap="round" opacity="0.5"/>
+      <line x1="45" y1="40" x2="61" y2="45" stroke={color} strokeWidth="1.3" strokeLinecap="round" opacity="0.5"/>
+      <line x1="45" y1="62" x2="61" y2="47" stroke={color} strokeWidth="1.3" strokeLinecap="round" opacity="0.5"/>
     </svg>
   );
 }
@@ -172,7 +181,7 @@ function PipelineIcon({ color }) {
   );
 }
 
-const ICON_MAP = { mobile: MobileIcon, cloud: CloudIcon, api: ApiIcon, observe: ObserveIcon, ar: ArIcon, dashboard: DashboardIcon, pipeline: PipelineIcon };
+const ICON_MAP = { mobile: MobileIcon, cloud: CloudIcon, api: ApiIcon, observe: ObserveIcon, mlops: MlopsIcon, dashboard: DashboardIcon, pipeline: PipelineIcon };
 
 export default function Experience() {
   const wrapperRef = useRef(null);

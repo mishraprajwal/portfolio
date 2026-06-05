@@ -2,6 +2,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Projects from './components/Projects';
 import Experience from './components/Experience';
+import StartupBanner from './components/StartupBanner';
 import Footer from './components/Footer';
 import Education from './components/Education';
 import TechStack from './components/TechStack';
@@ -13,6 +14,7 @@ const App = () => {
     <main className="bg-black">
       <Navbar />
       <Hero />
+      <StartupBanner />
       <Experience />
       <Projects />
       <TechStack />

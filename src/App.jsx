@@ -1,28 +1,32 @@
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Projects from './components/Projects';
-import Experience from './components/Experience';
-import StartupBanner from './components/StartupBanner';
-import Footer from './components/Footer';
-import Education from './components/Education';
-import TechStack from './components/TechStack';
-
-// import * as Sentry from '@sentry/react';
+import { useEffect } from 'react';
+import Lenis from 'lenis';
+import gsap from 'gsap';
+import PortfolioHome from './components/home/PortfolioHome';
 
 const App = () => {
-  return (
-    <main className="bg-black">
-      <Navbar />
-      <Hero />
-      <StartupBanner />
-      <Experience />
-      <Projects />
-      <TechStack />
-      <Education />
-      <Footer />
-    </main>
-  )
-}
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.05,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+
+    const scrollToTop = () => lenis.scrollTo(0, { immediate: true, force: true });
+    window.addEventListener('portfolio:scroll-top', scrollToTop);
+    scrollToTop();
+
+    const onTick = (time) => lenis.raf(time * 1000);
+    gsap.ticker.add(onTick);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      window.removeEventListener('portfolio:scroll-top', scrollToTop);
+      gsap.ticker.remove(onTick);
+      lenis.destroy();
+    };
+  }, []);
+
+  return <PortfolioHome />;
+};
 
 export default App;
-// export default Sentry.withProfiler(App);

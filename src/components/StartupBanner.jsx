@@ -86,7 +86,7 @@ export default function StartupBanner() {
     <section
       ref={sectionRef}
       id="about"
-      className="w-full min-h-screen bg-black text-white flex items-center relative overflow-hidden"
+      className="w-full min-h-screen bg-transparent text-white flex items-center relative overflow-hidden"
     >
       {/* Ambient glow */}
       <div className="absolute pointer-events-none" style={{

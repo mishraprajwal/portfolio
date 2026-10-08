@@ -129,7 +129,7 @@ export default function CoffeeSection() {
   const timeSlots = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'];
 
   return (
-    <section ref={sectionRef} className="about-section relative overflow-hidden">
+    <section ref={sectionRef} className="about-section about-section--coffee relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-0 w-full">
 
         {/* ── Main split layout ── */}
@@ -142,19 +142,21 @@ export default function CoffeeSection() {
             </div>
           </div>
 
-          {/* Right: Witty text + counter + contact */}
+          {/* Right: Text + counter + contact */}
           <div className="flex-1 text-center lg:text-left w-full">
+            <p className="coffee-reveal about-kicker text-xs md:text-sm font-medium tracking-widest uppercase mb-2">
+              01 / Daily ritual
+            </p>
             <h3 className="coffee-reveal text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
-              Fueled by <span style={{ color: '#C4A882' }}>Caffeine</span>
+              Coffee keeps me going
             </h3>
-            <p className="coffee-reveal mt-2 md:mt-3 text-sm md:text-base text-white/70 leading-relaxed max-w-xl">
-              Behind every clean commit and elegant solution is an unreasonable amount of coffee.
-              I don't debug — I caffeinate until the code fixes itself.
+            <p className="coffee-reveal about-tagline mt-2 md:mt-3 text-sm md:text-base leading-relaxed max-w-xl">
+              Coffee first. Then I can think in full sentences.
             </p>
 
             <div className="coffee-reveal mt-4 md:mt-6 flex flex-col sm:flex-row items-center lg:items-start gap-4">
               <div className="text-center">
-                <div ref={counterRef} className="text-3xl md:text-5xl font-extrabold tracking-tighter tabular-nums" style={{ color: '#C4A882' }}>
+                <div ref={counterRef} className="about-stat-number text-3xl md:text-5xl font-extrabold tracking-tighter tabular-nums">
                   {cups.toLocaleString()}
                 </div>
                 <p className="text-xs mt-0.5 text-white/40">cups & counting</p>
@@ -162,22 +164,17 @@ export default function CoffeeSection() {
               <div className="hidden sm:block w-px h-12 bg-white/10" />
               <div className="text-center sm:text-left">
                 <p className="text-white/60 text-xs md:text-sm leading-relaxed max-w-xs">
-                  Espresso before standup. Pour-over before deep work.
-                  Cold brew before production deploys. It's not addiction — it's a <span className="text-white/90 font-medium">development dependency</span>.
+                  My go-to: espresso, pour-over, and cold brew.
                 </p>
               </div>
             </div>
-
-            <p className="coffee-reveal mt-3 text-white/40 text-xs italic">
-              "First, solve the problem. Then, pour the coffee." — somebody, probably
-            </p>
 
             {/* ── Inline contact ── */}
             <div className="coffee-contact mt-6 md:mt-8">
               <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm p-4 md:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0 mb-1">
                   <h4 className="text-sm md:text-base font-semibold text-white">
-                    Let's grab a virtual coffee
+                    Let’s talk over coffee
                   </h4>
                   <button
                     type="button"
@@ -188,7 +185,7 @@ export default function CoffeeSection() {
                   </button>
                 </div>
                 <p className="text-white/50 text-xs mb-3">
-                  {showSchedule ? 'Pick a date & time — I\'ll confirm over email.' : 'Drop your message — I read every one over my morning espresso.'}
+                  {showSchedule ? 'Choose a date and time. I’ll confirm by email.' : 'Send me a message. I’ll get back to you.'}
                 </p>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-2 md:gap-3">
@@ -207,7 +204,7 @@ export default function CoffeeSection() {
                         <input
                           name="message"
                           required
-                          placeholder="What's brewing on your mind?"
+                          placeholder="Your message"
                           className="flex-[2] bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-xs md:text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/20 transition"
                         />
                         <button
@@ -228,7 +225,7 @@ export default function CoffeeSection() {
                         type="date"
                         required
                         min={(() => { const d = new Date(); d.setDate(d.getDate() + 1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })()}
-                        className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-xs md:text-sm text-white focus:outline-none focus:border-white/20 transition [color-scheme:dark]"
+                        className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-xs md:text-sm text-white focus:outline-none focus:border-white/20 transition [color-scheme:light]"
                       />
                       <select
                         name="time"
@@ -237,7 +234,7 @@ export default function CoffeeSection() {
                       >
                         <option value="" disabled selected className="text-white/30">Select time (PST)</option>
                         {timeSlots.map(t => (
-                          <option key={t} value={t} className="bg-black text-white">{t}</option>
+                          <option key={t} value={t} className="bg-white text-slate-900">{t}</option>
                         ))}
                       </select>
                       <button

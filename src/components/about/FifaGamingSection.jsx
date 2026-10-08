@@ -109,7 +109,7 @@ export default function FifaGamingSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="about-section relative overflow-hidden">
+    <section ref={sectionRef} className="about-section about-section--fifa relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-0 w-full">
 
         <div className="flex flex-col lg:flex-row items-center gap-4 sm:gap-8 lg:gap-16">
@@ -124,45 +124,40 @@ export default function FifaGamingSection() {
 
           {/* Right: Text + Stats */}
           <div className="flex-1 text-center lg:text-left">
-            <p className="fifa-reveal text-xs md:text-sm font-medium tracking-widest uppercase mb-2" style={{ color: 'rgba(168,85,247,0.7)' }}>
-              Off-duty mode
+            <p className="fifa-reveal about-kicker text-xs md:text-sm font-medium tracking-widest uppercase mb-2">
+              04 / After hours
             </p>
             <h3 className="fifa-reveal text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
-              <span style={{ color: '#A855F7' }}>FIFA</span> — Controller & Conqueror
+              <span className="about-highlight">FIFA</span>
             </h3>
-            <p className="fifa-reveal mt-2 md:mt-3 text-sm md:text-base text-white/60 leading-relaxed max-w-lg">
-              When I'm not shipping code, I'm shipping goals. 
-              My debugging skills carry over — reading opponents like stack traces, 
-              finding gaps in defense like finding bugs in production.
+            <p className="fifa-reveal about-tagline mt-2 md:mt-3 text-sm md:text-base leading-relaxed max-w-lg">
+              I plan to play one match. It rarely stays at one.
             </p>
 
             {/* Live counter */}
             <div className="fifa-reveal mt-5 md:mt-6">
-              <div ref={counterRef} className="text-4xl md:text-5xl font-extrabold tracking-tighter tabular-nums inline-block" style={{ color: '#A855F7' }}>
+              <div ref={counterRef} className="about-stat-number text-4xl md:text-5xl font-extrabold tracking-tighter tabular-nums inline-block">
                 {goals.toLocaleString()}
               </div>
-              <p className="text-xs text-white/40 mt-0.5">career goals — and counting</p>
+              <p className="text-xs text-white/40 mt-0.5">goals scored</p>
             </div>
 
             {/* Stats grid */}
             <div className="fifa-reveal mt-4 sm:mt-5 grid grid-cols-3 gap-2 sm:gap-3 max-w-sm mx-auto lg:mx-0 w-full">
               <div className="stat-card rounded-xl border border-green-500/20 bg-green-500/[0.05] p-3 text-center">
-                <div className="text-xl md:text-2xl font-bold text-green-400 tabular-nums">{wins.toLocaleString()}</div>
-                <p className="text-[10px] md:text-xs text-green-400/60 mt-0.5">Wins</p>
+                <div className="about-stat-number text-xl md:text-2xl font-bold tabular-nums">{wins.toLocaleString()}</div>
+                <p className="mt-0.5">Wins</p>
               </div>
               <div className="stat-card rounded-xl border border-white/[0.08] bg-white/[0.03] p-3 text-center">
-                <div className="text-xl md:text-2xl font-bold text-white tabular-nums">{draws.toLocaleString()}</div>
-                <p className="text-[10px] md:text-xs text-white/50 mt-0.5">Draws</p>
+                <div className="about-stat-number text-xl md:text-2xl font-bold tabular-nums">{draws.toLocaleString()}</div>
+                <p className="mt-0.5">Draws</p>
               </div>
               <div className="stat-card rounded-xl border border-red-500/20 bg-red-500/[0.05] p-3 text-center">
-                <div className="text-xl md:text-2xl font-bold text-red-400 tabular-nums">{losses.toLocaleString()}</div>
-                <p className="text-[10px] md:text-xs text-red-400/60 mt-0.5">Losses</p>
+                <div className="about-stat-number text-xl md:text-2xl font-bold tabular-nums">{losses.toLocaleString()}</div>
+                <p className="mt-0.5">Losses</p>
               </div>
             </div>
 
-            <p className="fifa-reveal mt-4 text-white/30 text-xs italic max-w-md mx-auto lg:mx-0">
-              "I don't rage quit — I call it an aggressive deployment rollback."
-            </p>
           </div>
         </div>
 

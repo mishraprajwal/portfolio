@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const FEATURES = [
   {
     company: 'Saffron', companyColor: '#F4A900',
-    role: 'Full Stack Engineer · Feb 2026 – Present',
+    role: 'Full Stack Engineer · February 2026 – Present',
     location: 'Seattle, WA · Onsite',
     category: 'Mobile Engineering',
     title: 'FWA Signal Mapping App',
@@ -18,7 +18,7 @@ const FEATURES = [
   },
   {
     company: 'Saffron', companyColor: '#F4A900',
-    role: 'Full Stack Engineer · Feb 2026 – Present',
+    role: 'Full Stack Engineer · February 2026 – Present',
     location: 'Seattle, WA · Onsite',
     category: 'Machine Learning',
     title: 'MLOps on SageMaker',
@@ -28,7 +28,7 @@ const FEATURES = [
   },
   {
     company: 'Saffron', companyColor: '#F4A900',
-    role: 'Full Stack Engineer · Feb 2026 – Present',
+    role: 'Full Stack Engineer · February 2026 – Present',
     location: 'Seattle, WA · Onsite',
     category: 'Cloud Infrastructure',
     title: 'Infrastructure as Code',
@@ -38,7 +38,7 @@ const FEATURES = [
   },
   {
     company: 'Saffron', companyColor: '#F4A900',
-    role: 'Full Stack Engineer · Feb 2026 – Present',
+    role: 'Full Stack Engineer · February 2026 – Present',
     location: 'Seattle, WA · Onsite',
     category: 'Analytics & BI',
     title: 'Embedded Analytics Dashboard',
@@ -48,7 +48,7 @@ const FEATURES = [
   },
   {
     company: 'Saffron', companyColor: '#F4A900',
-    role: 'Full Stack Engineer · Feb 2026 – Present',
+    role: 'Full Stack Engineer · February 2026 – Present',
     location: 'Seattle, WA · Onsite',
     category: 'API Design',
     title: 'Serverless Microservices APIs',
@@ -58,7 +58,7 @@ const FEATURES = [
   },
   {
     company: 'Tata Consultancy Services', companyColor: '#3B82F6',
-    role: 'Software Engineer · Apr 2021 – Apr 2023',
+    role: 'Software Engineer · April 2021 – April 2023',
     location: 'Mumbai, Maharashtra · Onsite',
     category: 'Engineering Visibility',
     title: 'Serverless Alerting Pipeline',
@@ -68,7 +68,7 @@ const FEATURES = [
   },
   {
     company: 'Tata Consultancy Services', companyColor: '#3B82F6',
-    role: 'Software Engineer · Apr 2021 – Apr 2023',
+    role: 'Software Engineer · April 2021 – April 2023',
     location: 'Mumbai, Maharashtra · Onsite',
     category: 'Quality Engineering',
     title: 'Zero-Touch Regression',
@@ -183,6 +183,16 @@ function PipelineIcon({ color }) {
 
 const ICON_MAP = { mobile: MobileIcon, cloud: CloudIcon, api: ApiIcon, observe: ObserveIcon, mlops: MlopsIcon, dashboard: DashboardIcon, pipeline: PipelineIcon };
 
+function WindowControls() {
+  return (
+    <div className="flex shrink-0 items-center gap-2" aria-hidden="true">
+      <span className="h-3 w-3 rounded-full bg-[#ff5f57] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.08)]" />
+      <span className="h-3 w-3 rounded-full bg-[#febc2e] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.08)]" />
+      <span className="h-3 w-3 rounded-full bg-[#28c840] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.08)]" />
+    </div>
+  );
+}
+
 export default function Experience() {
   const wrapperRef = useRef(null);
   const iconRefs = useRef([]);
@@ -280,26 +290,31 @@ export default function Experience() {
   const firstF = FEATURES[0];
 
   return (
-    <section ref={wrapperRef} id="experience" className="w-full bg-black text-white overflow-hidden">
+    <section ref={wrapperRef} id="experience" className="w-full overflow-hidden text-[#1d1d1f]" style={{ background: 'linear-gradient(145deg, #edf2f8 0%, #f7f8fb 48%, #e8eef7 100%)' }}>
 
       {/* ── DESKTOP: Apple feature showcase ── */}
-      <div className="hidden md:flex flex-col" style={{ minHeight: '100vh' }}>
+      <div className="hidden md:flex flex-col overflow-hidden border border-white/80 bg-white/70 shadow-[0_28px_90px_rgba(50,65,90,0.14)] backdrop-blur-2xl" style={{ minHeight: 'calc(100vh - 48px)', margin: '24px', borderRadius: '24px' }}>
 
-        {/* Top bar */}
-        <div className="flex items-start justify-between px-12 lg:px-20 pt-8 shrink-0">
+        {/* macOS window title bar */}
+        <div className="flex shrink-0 items-center justify-between border-b border-black/[0.07] bg-white/75 px-6 py-4 sm:px-8">
+          <div className="flex min-w-0 items-center gap-5">
+            <WindowControls />
+            <h2 className="truncate text-sm font-semibold tracking-tight text-[#424247]">Career &amp; Experience</h2>
+          </div>
+          <span ref={counterRef} className="ml-4 shrink-0 font-mono text-[11px] font-semibold tracking-[0.16em] text-[#86868b]">01 / {String(FEATURES.length).padStart(2, '0')}</span>
+        </div>
+
+        {/* Current role */}
+        <div className="flex shrink-0 items-start justify-between px-8 pt-8 lg:px-16 lg:pt-10">
           <div>
             <span ref={companyLabelRef} className="block text-xl font-bold tracking-tight" style={{ color: firstF.companyColor }}>{firstF.company}</span>
-            <span ref={companyRoleRef} className="block text-sm text-white/70 mt-1 font-medium">{firstF.role}</span>
-            <span ref={companyLocationRef} className="block text-xs text-white/38 mt-0.5 tracking-wide">{firstF.location}</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <h2 className="text-xs font-medium text-white/30 tracking-[0.2em] uppercase">Career & Experience</h2>
-            <span ref={counterRef} className="text-xs font-mono font-bold tracking-[0.22em] text-white/28">01 / {String(FEATURES.length).padStart(2, '0')}</span>
+            <span ref={companyRoleRef} className="mt-1 block text-sm font-medium text-[#6e6e73]">{firstF.role}</span>
+            <span ref={companyLocationRef} className="mt-0.5 block text-xs tracking-wide text-[#86868b]">{firstF.location}</span>
           </div>
         </div>
 
         {/* Main feature area */}
-        <div className="flex-1 flex items-center px-12 lg:px-20 gap-8 py-4">
+        <div className="flex flex-1 items-center gap-8 px-8 py-4 lg:px-16">
 
           {/* Left: icon + ambient glow */}
           <div className="w-[44%] flex items-center justify-center relative" style={{ minHeight: '320px' }}>
@@ -326,16 +341,16 @@ export default function Experience() {
           </div>
 
           {/* Vertical divider */}
-          <div className="self-stretch w-px shrink-0 my-12" style={{ background: 'rgba(255,255,255,0.05)' }} />
+          <div className="my-12 w-px shrink-0 self-stretch" style={{ background: 'rgba(29,29,31,0.10)' }} />
 
           {/* Right: feature text */}
           <div className="flex-1 relative" style={{ minHeight: '280px' }}>
             {FEATURES.map((f, i) => (
               <div key={i} ref={el => { textRefs.current[i] = el; }} className="absolute inset-0 flex flex-col justify-center">
                 <span className="block text-[11px] font-bold tracking-[0.28em] uppercase mb-5" style={{ color: f.companyColor }}>{f.category}</span>
-                <h3 className="text-[2.4rem] lg:text-[3rem] xl:text-[3.6rem] font-bold leading-[1.06] tracking-tight text-white mb-5">{f.title}</h3>
-                <p className="text-base lg:text-[1.05rem] text-white/50 leading-relaxed max-w-sm mb-6">{f.description}</p>
-                <span className="text-xs text-white/28 tracking-wider font-medium">{f.detail}</span>
+                <h3 className="mb-5 text-[2.4rem] font-bold leading-[1.06] tracking-tight text-[#1d1d1f] lg:text-[3rem] xl:text-[3.6rem]">{f.title}</h3>
+                <p className="mb-6 max-w-sm text-base leading-relaxed text-[#6e6e73] lg:text-[1.05rem]">{f.description}</p>
+                <span className="text-xs font-medium tracking-wider text-[#86868b]">{f.detail}</span>
               </div>
             ))}
           </div>
@@ -343,8 +358,8 @@ export default function Experience() {
         </div>
 
         {/* Progress bar + dots */}
-        <div className="shrink-0 flex flex-col items-center gap-3 pb-7 px-12">
-          <div className="w-60 h-px bg-white/10 rounded-full overflow-hidden">
+        <div className="flex shrink-0 flex-col items-center gap-3 px-12 pb-7">
+          <div className="h-px w-60 overflow-hidden rounded-full bg-black/10">
             <div ref={progressLineRef} className="h-full rounded-full" style={{ width: '0%', backgroundColor: firstF.companyColor }} />
           </div>
           <div className="flex items-center gap-2">
@@ -357,13 +372,13 @@ export default function Experience() {
       </div>
 
       {/* ── MOBILE: grouped feature cards ── */}
-      <div className="flex flex-col md:hidden px-4 pt-14 pb-14 gap-10">
-        <h2
-          className="text-2xl sm:text-3xl font-semibold text-center text-white mb-2"
-          style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}
-        >
-          Career & Experience
-        </h2>
+      <div className="flex flex-col gap-10 px-4 py-10 md:hidden">
+        <div className="flex items-center gap-4 rounded-2xl border border-white/80 bg-white/75 px-5 py-4 shadow-[0_10px_30px_rgba(50,65,90,0.08)] backdrop-blur-xl">
+          <WindowControls />
+          <h2 className="min-w-0 truncate text-lg font-semibold tracking-tight text-[#424247]" style={{ fontFamily: 'SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif' }}>
+            Career &amp; Experience
+          </h2>
+        </div>
         {[...new Set(FEATURES.map(f => f.company))].map((co) => {
           const coFeatures = FEATURES.filter(f => f.company === co);
           const coColor = coFeatures[0].companyColor;
@@ -371,14 +386,14 @@ export default function Experience() {
             <div key={co}>
               <div className="mb-5">
                 <span className="block text-lg font-bold tracking-tight" style={{ color: coColor }}>{co}</span>
-                <p className="text-sm text-white/65 mt-0.5 font-medium">{coFeatures[0].role}</p>
-                <p className="text-xs text-white/38 mt-0.5 tracking-wide">{coFeatures[0].location}</p>
+                <p className="mt-0.5 text-sm font-medium text-[#6e6e73]">{coFeatures[0].role}</p>
+                <p className="mt-0.5 text-xs tracking-wide text-[#86868b]">{coFeatures[0].location}</p>
               </div>
               <div className="flex flex-col gap-3">
                 {coFeatures.map((f, i) => {
                   const IconComp = ICON_MAP[f.icon];
                   return (
-                    <div key={i} className="feat-mobile-card relative overflow-hidden rounded-2xl p-5 border" style={{ background: 'rgba(255,255,255,0.04)', borderColor: `${coColor}22` }}>
+                    <div key={i} className="feat-mobile-card relative overflow-hidden rounded-2xl border bg-white/75 p-5 shadow-[0_10px_30px_rgba(50,65,90,0.06)]" style={{ borderColor: `${coColor}30` }}>
                       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: `linear-gradient(to right, transparent, ${coColor}55, transparent)` }} />
                       <div className="flex items-start gap-4">
                         <div className="shrink-0 mt-0.5" style={{ width: '36px', height: '36px' }}>
@@ -386,9 +401,9 @@ export default function Experience() {
                         </div>
                         <div className="min-w-0">
                           <span className="text-[10px] font-bold tracking-widest uppercase block mb-1" style={{ color: coColor }}>{f.category}</span>
-                          <h3 className="text-base font-bold text-white mb-1.5 leading-snug">{f.title}</h3>
-                          <p className="text-xs text-white/45 leading-relaxed">{f.description}</p>
-                          <span className="block mt-2 text-[10px] text-white/25 tracking-wide">{f.detail}</span>
+                          <h3 className="mb-1.5 text-base font-bold leading-snug text-[#1d1d1f]">{f.title}</h3>
+                          <p className="text-xs leading-relaxed text-[#6e6e73]">{f.description}</p>
+                          <span className="mt-2 block text-[10px] tracking-wide text-[#86868b]">{f.detail}</span>
                         </div>
                       </div>
                     </div>

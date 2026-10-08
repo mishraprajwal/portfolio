@@ -84,38 +84,36 @@ export default function RunSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="about-section relative overflow-hidden">
+    <section ref={sectionRef} className="about-section about-section--run relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-0 w-full">
 
         <div className="flex flex-col-reverse lg:flex-row items-center gap-6 sm:gap-8 lg:gap-16">
 
           {/* Left: Text + Stats */}
           <div className="flex-1 text-center lg:text-left">
-            <p className="run-reveal text-xs md:text-sm font-medium tracking-widest uppercase mb-2" style={{ color: 'rgba(252,76,2,0.7)' }}>
-              On the road
+            <p className="run-reveal about-kicker text-xs md:text-sm font-medium tracking-widest uppercase mb-2">
+              03 / Outside work
             </p>
             <h3 className="run-reveal text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
-              <span style={{ color: '#FC4C02' }}>Miles</span> Before Meetings
+              Morning runs
             </h3>
-            <p className="run-reveal mt-2 md:mt-3 text-sm md:text-base text-white/50 leading-relaxed max-w-lg">
-              Every morning starts with a run — no playlist, no excuses.
-              It's where the best ideas come from and the worst bugs get debugged mentally.
-              Consistency over intensity.
+            <p className="run-reveal about-tagline mt-2 md:mt-3 text-sm md:text-base leading-relaxed max-w-lg">
+              A morning run is my favorite reset.
             </p>
 
             {/* Stats */}
             <div className="run-reveal mt-6 md:mt-8 grid grid-cols-2 gap-3 sm:gap-4 max-w-sm mx-auto lg:mx-0">
               <div className="run-stat rounded-xl border p-4 sm:p-5 text-center" style={{ borderColor: 'rgba(252,76,2,0.15)', background: 'rgba(252,76,2,0.04)' }}>
-                <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tighter tabular-nums">
+                <div className="about-stat-number text-3xl sm:text-4xl font-extrabold tracking-tighter tabular-nums">
                   {DAILY_RUN}
                 </div>
                 <p className="text-[10px] sm:text-xs mt-1 font-medium" style={{ color: 'rgba(252,76,2,0.6)' }}>miles / day</p>
               </div>
               <div className="run-stat rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 sm:p-5 text-center">
-                <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tighter tabular-nums">
+                <div className="about-stat-number text-3xl sm:text-4xl font-extrabold tracking-tighter tabular-nums">
                   {HIGHEST_RUN}
                 </div>
-                <p className="text-[10px] sm:text-xs text-white/40 mt-1 font-medium">miles — longest</p>
+                <p className="text-[10px] sm:text-xs text-white/40 mt-1 font-medium">longest run (miles)</p>
               </div>
             </div>
 
@@ -134,9 +132,6 @@ export default function RunSection() {
               <p className="text-[9px] mt-1 text-right" style={{ color: 'rgba(252,76,2,0.4)' }}>✓ completed</p>
             </div>
 
-            <p className="run-reveal mt-5 text-white/25 text-xs italic max-w-md mx-auto lg:mx-0">
-              "Clear mind, clean code — one mile at a time."
-            </p>
           </div>
 
           {/* Right: Animated Strava card */}

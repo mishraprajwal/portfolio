@@ -115,7 +115,7 @@ export default function TechStack() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="techstack" className="w-full bg-black text-white relative py-12 md:py-20">
+    <section ref={sectionRef} id="techstack" className="w-full bg-transparent text-white relative py-12 md:py-20">
       <div className="max-w-5xl mx-auto px-4 md:px-6">
         <h2
           className="text-2xl sm:text-3xl md:text-5xl font-semibold text-center mb-3 md:mb-4"

@@ -6,6 +6,10 @@ import './index.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
+if ('scrollRestoration' in window.history) {
+  window.history.scrollRestoration = 'manual';
+}
+
 const getPathname = () => {
   if (typeof window === 'undefined') return '/';
   const hash = window.location.hash || '';
@@ -20,6 +24,10 @@ const renderApp = () => {
       {pathname.startsWith('/about') ? <AboutPage /> : <App />}
     </React.StrictMode>
   );
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => window.scrollTo(0, 0));
+  });
 };
 
 // initial render

@@ -8,18 +8,65 @@
   box-sizing: border-box;
 }
 
+:root {
+  --ink: #17251f;
+  --paper: #f3f1e9;
+}
+
 body {
-  color: white;
-  width: 100dvw;
+  color: var(--ink);
+  width: 100%;
   overflow-x: hidden;
   height: 100%;
-  background: #000;
-  border-color: #3b3b3b;
-  user-select: none;
+  background: var(--paper);
+  border-color: rgba(23, 37, 31, 0.16);
+  user-select: auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.font-serif-display {
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+}
+
+::selection {
+  background: #b9c6af;
+  color: #17251f;
+}
+
+/* fine grain for texture, very subtle */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.018;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 canvas {
   touch-action: none;
+}
+
+/* ── Section hairline divider ── */
+.warp-divider {
+  position: relative;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.18) 50%, transparent);
+}
+.warp-divider::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: min(420px, 60%);
+  height: 2px;
+  transform: translateX(-50%);
+  background: var(--warp-color, rgba(255,255,255,0.35));
+  filter: blur(3px);
+  opacity: 0.7;
 }
 
 .screen-max-width {
@@ -27,6 +74,16 @@ canvas {
   margin-inline-end: auto;
   position: relative;
   max-width: 1120px;
+}
+
+/* ── Continuous marquee (Hero skills strip) ── */
+.marquee-content {
+  animation: marquee-scroll 22s linear infinite;
+  width: max-content;
+}
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 @layer utilities {
@@ -427,7 +484,7 @@ location { color: rgba(255,255,255,0.65); }
 
 #projects {
   position: relative;
-  background: #000;
+  background: transparent;
 }
 
 /* modal removed */

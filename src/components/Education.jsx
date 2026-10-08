@@ -132,7 +132,7 @@ export default function Education() {
         <section
             id="education"
             ref={rootRef}
-            className="w-full bg-black text-white pt-20 md:pt-28 pb-32 md:pb-48 overflow-hidden"
+            className="w-full bg-transparent text-white pt-20 md:pt-28 pb-32 md:pb-48 overflow-hidden"
         >
             <div className="max-w-5xl mx-auto px-4 md:px-6">
                 <h2
@@ -160,8 +160,8 @@ export default function Education() {
                             left: '3.25rem',
                             height: 0,
                             background:
-                                'linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0.4) 70%, rgba(255,255,255,0.15))',
-                            boxShadow: '0 0 12px rgba(255,255,255,0.25)',
+                                'linear-gradient(to bottom, rgba(52,211,153,0.9), rgba(52,211,153,0.4) 70%, rgba(52,211,153,0.15))',
+                            boxShadow: '0 0 12px rgba(52,211,153,0.35)',
                         }}
                         aria-hidden
                     />
@@ -191,7 +191,7 @@ export default function Education() {
                                     ref={(el) => {
                                         dotRefs.current[i] = el;
                                     }}
-                                    className="edu-dot absolute flex items-center justify-center rounded-full bg-black"
+                                    className="edu-dot absolute flex items-center justify-center rounded-full bg-[#f7f4ee]"
                                     style={{
                                         left: 'calc(3.25rem - 9px)',
                                         top: '0.5rem',

@@ -5,7 +5,7 @@ import About from './components/About';
 
 const AboutPage = () => {
   return (
-    <main className="bg-black">
+    <main className="about-page">
       <Navbar />
       <About />
       <Footer />

@@ -7,37 +7,31 @@ gsap.registerPlugin(ScrollTrigger);
 
 const LEETCODE_USERNAME = 'mishraprajwal28';
 
-/* ── Fallback calendar + stats (fetched from LeetCode GraphQL API) ── */
+/* ── Offline fallback; live data is fetched from LeetCode below ── */
 const FALLBACK_CALENDAR = {"1744502400":1,"1745107200":1,"1745280000":1,"1745366400":1,"1745452800":6,"1745539200":1,"1745712000":1,"1745884800":5,"1745971200":2,"1746057600":2,"1746662400":1,"1746748800":12,"1746835200":3,"1746921600":5,"1747180800":5,"1747267200":13,"1747353600":12,"1747440000":2,"1747526400":2,"1747699200":2,"1747785600":8,"1747872000":11,"1747958400":9,"1748044800":17,"1748131200":9,"1748217600":17,"1748649600":11,"1748736000":14,"1748822400":1,"1748908800":7,"1748995200":2,"1749081600":21,"1749168000":14,"1749254400":23,"1749340800":1,"1749427200":6,"1749513600":5,"1749600000":12,"1749686400":13,"1749772800":5,"1750032000":1,"1750118400":3,"1750204800":3,"1750377600":5,"1750464000":10,"1750550400":3,"1750636800":4,"1750723200":6,"1750809600":6,"1750896000":4,"1750982400":1,"1751155200":2,"1751328000":6,"1751414400":5,"1751500800":2,"1751587200":5,"1751932800":3,"1752019200":1,"1752192000":2,"1752624000":2,"1752710400":1,"1752796800":3,"1753056000":2,"1753142400":1,"1753401600":1,"1753488000":1,"1757376000":1,"1760572800":1,"1760659200":1,"1761264000":1,"1763424000":1,"1765065600":2,"1765152000":2,"1765238400":1,"1765584000":1,"1765843200":3,"1765929600":2,"1766966400":1,"1768262400":2,"1768348800":2,"1769040000":2,"1769126400":2,"1773964800":2,"1774051200":4,"1774137600":8,"1774224000":1,"1774310400":1,"1774396800":3,"1774483200":2,"1774569600":2,"1774656000":2,"1774742400":6,"1775260800":8,"1775347200":1};
 const FALLBACK_STATS = { total: 183, easy: 53, medium: 112, hard: 18 };
 
-/* ── Fetch live data via CORS-friendly community API ── */
+/* ── Fetch live stats and calendar via a CORS-friendly LeetCode API ── */
 async function fetchLeetCodeData() {
   try {
-    const [solvedRes, calendarRes] = await Promise.all([
-      fetch(`https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}/solved`),
-      fetch(`https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}/calendar`),
-    ]);
+    const response = await fetch(`https://leetcode-api-faisalshohag.vercel.app/${LEETCODE_USERNAME}`);
+    if (!response.ok) throw new Error('LeetCode API request failed');
 
-    if (!solvedRes.ok || !calendarRes.ok) throw new Error('API error');
+    const data = await response.json();
+    const cal = typeof data.submissionCalendar === 'string'
+      ? JSON.parse(data.submissionCalendar)
+      : data.submissionCalendar;
 
-    const solved = await solvedRes.json();
-    const calendar = await calendarRes.json();
-
-    const cal = calendar.submissionCalendar
-      ? (typeof calendar.submissionCalendar === 'string'
-          ? JSON.parse(calendar.submissionCalendar)
-          : calendar.submissionCalendar)
-      : null;
+    if (!cal || typeof cal !== 'object') throw new Error('LeetCode calendar is unavailable');
 
     return {
       stats: {
-        total: solved.solvedProblem ?? FALLBACK_STATS.total,
-        easy: solved.easySolved ?? FALLBACK_STATS.easy,
-        medium: solved.mediumSolved ?? FALLBACK_STATS.medium,
-        hard: solved.hardSolved ?? FALLBACK_STATS.hard,
+        total: data.totalSolved ?? FALLBACK_STATS.total,
+        easy: data.easySolved ?? FALLBACK_STATS.easy,
+        medium: data.mediumSolved ?? FALLBACK_STATS.medium,
+        hard: data.hardSolved ?? FALLBACK_STATS.hard,
       },
-      calendar: cal || FALLBACK_CALENDAR,
+      calendar: cal,
     };
   } catch {
     return { stats: FALLBACK_STATS, calendar: FALLBACK_CALENDAR };
@@ -71,11 +65,11 @@ function buildHeatmapData(calendar) {
 }
 
 function getColor(count) {
-  if (count === 0) return 'rgba(255,255,255,0.04)';
-  if (count <= 2) return 'rgba(74,222,128,0.35)';
-  if (count <= 5) return 'rgba(74,222,128,0.5)';
-  if (count <= 10) return 'rgba(74,222,128,0.7)';
-  return 'rgba(74,222,128,0.9)';
+  if (count === 0) return '#e4e7eb';
+  if (count <= 2) return '#b7e4c7';
+  if (count <= 5) return '#69c98b';
+  if (count <= 10) return '#32a866';
+  return '#18794e';
 }
 
 function getMonthLabels(weeks) {
@@ -157,26 +151,24 @@ export default function DSASection() {
   const monthLabels = getMonthLabels(weeks);
 
   return (
-    <section ref={sectionRef} className="about-section relative overflow-hidden">
+    <section ref={sectionRef} className="about-section about-section--dsa relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 md:py-0 w-full">
 
         {/* Header + Stats */}
         <div className="text-center mb-8 md:mb-10">
-          <p className="dsa-reveal text-xs md:text-sm font-medium tracking-widest uppercase mb-2" style={{ color: 'rgba(59,130,246,0.7)' }}>
-            Problem Solver
+          <p className="dsa-reveal about-kicker text-xs md:text-sm font-medium tracking-widest uppercase mb-2">
+            02 / Coding practice
           </p>
           <h3 className="dsa-reveal text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight">
-            <span style={{ color: '#3B82F6' }}>Data Structures</span> & <span style={{ color: '#3B82F6' }}>Algorithms</span>
+            <span className="about-highlight">Data Structures</span> & <span className="about-highlight">Algorithms</span>
           </h3>
-          <p className="dsa-reveal mt-2 md:mt-3 text-sm md:text-base text-white/50 leading-relaxed max-w-xl mx-auto">
-            I don&apos;t just solve problems — I optimize them until the time complexity
-            begs for mercy. Trees, graphs, dynamic programming —
-            the kind of puzzles that make 3 AM feel productive.
+          <p className="dsa-reveal about-tagline mt-2 md:mt-3 text-sm md:text-base leading-relaxed max-w-xl mx-auto">
+            I enjoy solving LeetCode problems—except on interview days.
           </p>
 
           {/* Big number */}
           <div className="dsa-reveal mt-5">
-            <span className="text-5xl md:text-6xl font-extrabold tracking-tighter tabular-nums" style={{ color: '#3B82F6' }}>
+            <span className="about-stat-number text-5xl md:text-6xl font-extrabold tracking-tighter tabular-nums">
               {stats.total}
             </span>
             <p className="text-xs text-white/40 mt-1">problems solved on LeetCode</p>
@@ -184,20 +176,20 @@ export default function DSASection() {
 
           {/* Difficulty pills */}
           <div className="dsa-reveal mt-4 flex flex-wrap gap-2 justify-center">
-            <span className="diff-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-500/10 border border-green-500/20 text-green-400">
+            <span className="diff-pill diff-pill--easy px-3 py-1.5 rounded-lg text-xs font-semibold">
               Easy {stats.easy}
             </span>
-            <span className="diff-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-yellow-500/10 border border-yellow-500/20 text-yellow-400">
+            <span className="diff-pill diff-pill--medium px-3 py-1.5 rounded-lg text-xs font-semibold">
               Medium {stats.medium}
             </span>
-            <span className="diff-pill px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-500/10 border border-red-500/20 text-red-400">
+            <span className="diff-pill diff-pill--hard px-3 py-1.5 rounded-lg text-xs font-semibold">
               Hard {stats.hard}
             </span>
           </div>
         </div>
 
         {/* ── GitHub-style Heatmap ── */}
-        <div className="dsa-reveal rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 sm:p-4 md:p-5 overflow-x-auto w-fit mx-auto max-w-full">
+        <div className="dsa-reveal dsa-heatmap-card rounded-xl p-3 sm:p-4 md:p-5 overflow-x-auto w-fit mx-auto max-w-full">
 
           {/* Summary row */}
           <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between gap-1 sm:gap-2 mb-3 sm:mb-4">
@@ -260,10 +252,6 @@ export default function DSASection() {
             <span className="text-[9px] text-white/30 ml-1">More</span>
           </div>
         </div>
-
-        <p className="dsa-reveal mt-5 text-center text-white/25 text-xs italic">
-          &ldquo;It compiles and passes all test cases on the first try&rdquo; — said no one ever.
-        </p>
 
       </div>
     </section>
